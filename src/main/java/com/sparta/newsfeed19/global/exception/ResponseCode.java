@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ResponseCode {
     // 공통 응답 코드
     SUCCESS("정상 처리되었습니다", HttpStatus.OK),
+    INVALID_REQUEST("잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
 
     // 사용자 응답 코드
     EXIST_EMAIL("존재하는 이메일 입니다.", HttpStatus.BAD_REQUEST)
