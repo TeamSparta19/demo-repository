@@ -1,4 +1,4 @@
-package com.sparta.newsfeed19.global.conpig;
+package com.sparta.newsfeed19.global.config;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;

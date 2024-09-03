@@ -1,6 +1,6 @@
 package com.sparta.newsfeed19.user;
 
-import com.sparta.newsfeed19.global.conpig.PasswordEncoder;
+import com.sparta.newsfeed19.global.config.PasswordEncoder;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.global.util.JwtUtil;
