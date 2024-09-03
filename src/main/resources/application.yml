@@ -36,3 +36,7 @@ logging:
   level:
     '[org.springframework.web]': DEBUG
     '[org.hibernate]': DEBUG
+
+jwt:
+  secret:
+    key: obm5UrjhTldGPca2IKHJFg0E5Atg26zd

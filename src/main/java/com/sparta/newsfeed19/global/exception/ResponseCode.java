@@ -9,7 +9,7 @@ public enum ResponseCode {
     SUCCESS("정상 처리되었습니다", HttpStatus.OK),
 
     // 사용자 응답 코드
-
+    EXIST_EMAIL("존재하는 이메일 입니다.", HttpStatus.BAD_REQUEST)
     // 게시물 응답 코드
 
     // 댓글 응답 코드
