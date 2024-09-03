@@ -1,8 +1,13 @@
 package com.sparta.newsfeed19.user;
 
-import com.sparta.newsfeed19.global.util.JwtUtil;
+import com.sparta.newsfeed19.user.dto.SimpleResponseDto;
 import com.sparta.newsfeed19.global.config.PasswordEncoder;
 import com.sparta.newsfeed19.global.exception.ApiException;
+import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.global.util.JwtUtil;
+import com.sparta.newsfeed19.user.dto.LoginRequestDto;
+import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
+import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
 import com.sparta.newsfeed19.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +28,7 @@ public class UserService {
     public SaveUserResponseDto saveUser(SaveUserRequestDto saveUserRequestDto) {
 
         if (userRepository.existsByEmail(saveUserRequestDto.getEmail())) {
-            throw new ApiException(EXIST_EMAIL);
+            throw new ApiException(ResponseCode.EXIST_EMAIL);
         }
 
         User user = new User(
@@ -39,36 +44,43 @@ public class UserService {
         );
     }
 
+    //유저 로그인
     @Transactional
-    public void login(LoginRequestDto requestDto) {
+    public String login(LoginRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
+
 
         // 사용자 확인
         User user = userRepository.findByEmail(email).orElseThrow(
                 ()->new IllegalArgumentException("등록된 회원이 없습니다.")
         );
 
-
-//        // 비밀번호 확인 인코딩 버전
-//        if (!passwordEncoder.matches(password,user.getPassword())) {
-//                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-
-        // 비밀번호 확인
-
-
+        // 비밀번호 확인 인코딩 버전
+        if (!passwordEncoder.matches(password,user.getPassword())) {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
         String token = jwtUtil.createToken(user.getEmail());
         jwtUtil.addJwtToCookie(token);
 
+        return token;
     }
+
+    //유저 조회
+    public SimpleResponseDto getUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new ApiException(ResponseCode.NOT_FOUND_USER));
+        return new SimpleResponseDto(user);
+    }
+
     @Transactional
     public UpdateUserPasswordResponseDto updateUserPassword(
             Long userId,
             UpdateUserPasswordRequestDto updateUserRequestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+
 
         // 비밀번호 수정 시, 본인 확인을 위해 입력한 현재 비밀번호가 일치하지 않은 경우
         if (!matches(updateUserRequestDto.getOldPassword(), user.getPassword())) {
