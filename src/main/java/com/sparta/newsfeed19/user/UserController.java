@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
-    public String login(LoginRequestDto requestDto, HttpServletResponse res) {
+    public String login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
         try {
             userService.login(requestDto, res);
         } catch (Exception e) {

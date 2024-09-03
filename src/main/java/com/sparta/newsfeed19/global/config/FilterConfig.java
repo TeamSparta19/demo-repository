@@ -1,5 +1,6 @@
 package com.sparta.newsfeed19.global.config;
 
+import com.sparta.newsfeed19.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

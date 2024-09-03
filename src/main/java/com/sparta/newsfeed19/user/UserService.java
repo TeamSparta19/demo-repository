@@ -52,10 +52,15 @@ public class UserService {
                 ()->new IllegalArgumentException("등록된 회원이 없습니다.")
         );
 
+
+//        // 비밀번호 확인 인코딩 버전
+//        if (!passwordEncoder.matches(password,user.getPassword())) {
+//                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+//        }
+
         // 비밀번호 확인
-        if (!passwordEncoder.matches(password,user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+
+
 
 
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
