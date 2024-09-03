@@ -3,15 +3,12 @@ package com.sparta.newsfeed19.user;
 import com.sparta.newsfeed19.global.util.JwtUtil;
 import com.sparta.newsfeed19.global.config.PasswordEncoder;
 import com.sparta.newsfeed19.global.exception.ApiException;
-import com.sparta.newsfeed19.global.util.JwtUtil;
-import com.sparta.newsfeed19.user.dto.LoginRequestDto;
-import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
-import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
-import jakarta.servlet.http.HttpServletResponse;
+import com.sparta.newsfeed19.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static com.sparta.newsfeed19.global.exception.ResponseCode.EXIST_EMAIL;
+import static com.sparta.newsfeed19.global.exception.ResponseCode.*;
+import static java.util.regex.Pattern.matches;
 
 
 @Service
@@ -42,10 +39,10 @@ public class UserService {
         );
     }
 
-    public void login(LoginRequestDto requestDto, HttpServletResponse res) {
+    @Transactional
+    public void login(LoginRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
-
 
         // 사용자 확인
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -62,11 +59,30 @@ public class UserService {
 
 
 
-
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
         String token = jwtUtil.createToken(user.getEmail());
-        jwtUtil.addJwtToCookie(token, res);
+        jwtUtil.addJwtToCookie(token);
 
     }
+    @Transactional
+    public UpdateUserPasswordResponseDto updateUserPassword(
+            Long userId,
+            UpdateUserPasswordRequestDto updateUserRequestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
+        // 비밀번호 수정 시, 본인 확인을 위해 입력한 현재 비밀번호가 일치하지 않은 경우
+        if (!matches(updateUserRequestDto.getOldPassword(), user.getPassword())) {
+            throw new ApiException(INVALID_PASSWORD);
+        }
+        //현재 비밀번호와 동일한 비밀번호로 수정하는 경우
+        if (matches(updateUserRequestDto.getNewPassword(), user.getPassword())) {
+            throw new ApiException(SAME_PASSWORD);
+        }
+
+        user.updatePassword(updateUserRequestDto.getNewPassword());
+
+        return new UpdateUserPasswordResponseDto(
+        );
+
+    }
 }

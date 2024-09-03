@@ -1,35 +1,41 @@
 package com.sparta.newsfeed19.user;
 
-import com.sparta.newsfeed19.user.dto.LoginRequestDto;
-import com.sparta.newsfeed19.user.dto.LoginResponseDto;
-import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
-import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
-import jakarta.servlet.http.HttpServletResponse;
+import com.sparta.newsfeed19.global.common.response.ApiResponse;
+import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.user.dto.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping("/users")
-    public ResponseEntity<SaveUserResponseDto> saveUser(@RequestBody SaveUserRequestDto saveUserRequestDto, HttpServletResponse response) {
-        return ResponseEntity.ok(userService.saveUser(saveUserRequestDto));
+    public ResponseEntity<?> saveUser(@Valid @RequestBody SaveUserRequestDto saveUserRequestDto) {
+        SaveUserResponseDto saveUserResponseDto = userService.saveUser(saveUserRequestDto);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, saveUserResponseDto));
     }
 
     @PostMapping("/users/login")
-    public String login(@RequestBody LoginRequestDto requestDto, HttpServletResponse res) {
+    public String login(@RequestBody LoginRequestDto requestDto) {
         try {
-            userService.login(requestDto, res);
+            userService.login(requestDto);
         } catch (Exception e) {
            return "redirect:/user/login?error=" + e.getMessage();
         }
         return "redirect:/";
+    }
+
+    @PatchMapping("users/{id}")
+    public ResponseEntity<?> updateUserPassword(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserPasswordRequestDto updateUserRequestDto) {
+        UpdateUserPasswordResponseDto updateUserPasswordResponseDto = userService.updateUserPassword(id, updateUserRequestDto);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, updateUserPasswordResponseDto));
     }
 }
