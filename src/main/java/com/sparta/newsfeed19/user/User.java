@@ -1,6 +1,6 @@
 package com.sparta.newsfeed19.user;
 
-import com.sparta.newsfeed19.baseentity.TimeStamp;
+import com.sparta.newsfeed19.global.common.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class User extends TimeStamp {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -25,10 +25,7 @@ public class User extends TimeStamp {
         this.password = password;
     }
 
-
-
-
-
-
-
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
