@@ -29,7 +29,8 @@ public class GlobalExceptionHandler {
         HttpStatus code = HttpStatus.BAD_REQUEST;
 
         List<String> fieldErrorList;
-        fieldErrorList = exception.getFieldErrors().stream().map(fieldError -> fieldError.getField() + " : " + fieldError.getDefaultMessage()).toList();
+        fieldErrorList = exception.getFieldErrors().stream()
+                .map(fieldError -> fieldError.getField() + " : " + fieldError.getDefaultMessage()).toList();
         ApiResponse apiResponse = ApiResponse.setResponse(ResponseCode.INVALID_REQUEST, fieldErrorList);
         return new ResponseEntity<>(apiResponse, code);
     }

@@ -10,6 +10,8 @@ import com.sparta.newsfeed19.post.entity.Post;
 import com.sparta.newsfeed19.post.repository.PostRepository;
 import com.sparta.newsfeed19.user.User;
 import com.sparta.newsfeed19.user.UserRepository;
+import com.sparta.newsfeed19.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     // 게시물 등록 메서드
     @Transactional
@@ -55,9 +58,9 @@ public class PostService {
         );
     }
 
-    // 게시물 다건 조회 메서드
+    // 게시물 다건 조회 메서드(이메일 기반)
     @Transactional
-    public Page<PostDetailResponseDto> getPosts(int page, int size) {
+    public Page<PostDetailResponseDto> getPosts(int page, int size, String email) {
         // 페이지 번호가 1보다 작다면 기본값 1로 설정
         if (page < 1) {
             page = 1;
@@ -70,7 +73,10 @@ public class PostService {
         
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
+
+        Page<Post> posts = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), pageable);
 
         return posts.map(post -> new PostDetailResponseDto(
                 post.getId(),
@@ -127,16 +133,17 @@ public class PostService {
 
     // 게시물 삭제 메서드
     @Transactional
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, HttpServletRequest request) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
 
-//        User currentUser = userService.getCurrentUser();
-//
-//        // 작성자 일치 여부 null-safe 비교
-//        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
-//            throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
-//        }
+        // 현제 사용자 확인
+        User currentUser = userService.getCurrentUser(request);
+
+        // 작성자 일치 여부 null-safe 비교
+        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+            throw new IllegalArgumentException("작성자가 일치하지 않습니다.");
+        }
 
         postRepository.deleteById(postId);
     }

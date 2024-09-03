@@ -2,11 +2,14 @@ package com.sparta.newsfeed19.user;
 
 import com.sparta.newsfeed19.global.conpig.PasswordEncoder;
 import com.sparta.newsfeed19.global.exception.ApiException;
+import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.global.util.JwtUtil;
 import com.sparta.newsfeed19.user.dto.LoginRequestDto;
 import com.sparta.newsfeed19.user.dto.LoginResponseDto;
 import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
 import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +45,7 @@ public class UserService {
         );
     }
 
-
+    @Transactional
     public void login(LoginRequestDto requestDto, HttpServletResponse res) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
@@ -64,5 +67,18 @@ public class UserService {
         String token = jwtUtil.createToken(user.getEmail());
         jwtUtil.addJwtToCookie(token, res);
 
+    }
+
+    // JWT에서 이메일을 추출하여 현재 유저를 가져오는 메서드
+    public User getCurrentUser(HttpServletRequest request) {
+        // 요청 헤더에서 JWT 토큰을 가져옴
+        String token = jwtUtil.substringToken(request.getHeader(JwtUtil.AUTHORIZATION_HEADER));
+
+        // JWT 토큰에서 이메일을 추출
+        String email = String.valueOf(jwtUtil.getUserInfoFromToken(token)); // 이메일이 직접 반환된다고 가정
+
+        // 이메일로 사용자 조회
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
     }
 }
