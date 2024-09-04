@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="user")
+@Table(name = "user")
 public class User extends TimeStamp {
 
     @Id
