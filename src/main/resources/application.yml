@@ -26,11 +26,15 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # or create-drop
     properties:
       hibernate:
         format_sql: true
-    open-in-view: true
+        order_inserts: true
+        order_updates: true
+        hbm2ddl.auto: create-drop
+        hbm2ddl.import_files: import.sql
+    open-in-view: false
 
 logging:
   level:

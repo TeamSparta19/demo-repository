@@ -9,18 +9,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name = "comment")
+@NoArgsConstructor
 public class Comment extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    // 사용자 이메일을 저장
+    @Column(name = "user_email", nullable = false)
+    private String userEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
@@ -29,13 +30,12 @@ public class Comment extends TimeStamp {
     @Column(nullable = false)
     private String contents;
 
-    public Comment(User user, Post post, String contents) {
-        this.user = user;
+    public Comment(String userEmail, Post post, String contents) {
+        this.userEmail = userEmail;
         this.post = post;
         this.contents = contents;
     }
 
-    // 댓글 내용 수정 메서드
     public void updateContents(String contents) {
         this.contents = contents;
     }

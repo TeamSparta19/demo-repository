@@ -21,8 +21,8 @@ public class CommentController {
     // 댓글 등록
     @PostMapping
     public ResponseEntity<ApiResponse> createComment(@RequestBody CommentRequestDto commentRequestDto,
-                                                     @LoginUser User loginUser) {
-        CommentResponseDto createdComment = commentService.createComment(commentRequestDto, loginUser);
+                                                     @LoginUser String email) {
+        CommentResponseDto createdComment = commentService.createComment(commentRequestDto, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), createdComment));
     }
 
@@ -30,16 +30,16 @@ public class CommentController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateComment(@PathVariable Long id,
                                                      @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
-                                                     @LoginUser User loginUser) {
-        CommentResponseDto updatedComment = commentService.updateComment(id, commentUpdateRequestDto, loginUser);
+                                                     @LoginUser String email) {
+        CommentResponseDto updatedComment = commentService.updateComment(id, commentUpdateRequestDto, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), updatedComment));
     }
 
     // 댓글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long id,
-                                                     @LoginUser User loginUser) {
-        commentService.deleteComment(id, loginUser);
+                                                     @LoginUser String email) {
+        commentService.deleteComment(id, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), null));
     }
 }
