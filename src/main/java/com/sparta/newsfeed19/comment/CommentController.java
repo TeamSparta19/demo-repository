@@ -5,28 +5,25 @@ import com.sparta.newsfeed19.comment.dto.CommentResponseDto;
 import com.sparta.newsfeed19.comment.dto.CommentUpdateRequestDto;
 import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.annotation.LoginUser;
+import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/comments")
+@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
-
-    @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
 
     // 댓글 등록
     @PostMapping
     public ResponseEntity<ApiResponse> createComment(@RequestBody CommentRequestDto commentRequestDto,
                                                      @LoginUser User loginUser) {
         CommentResponseDto createdComment = commentService.createComment(commentRequestDto, loginUser);
-        return ResponseEntity.ok(new ApiResponse(200, "정상 처리되었습니다.", createdComment));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), createdComment));
     }
 
     // 댓글 수정
@@ -35,7 +32,7 @@ public class CommentController {
                                                      @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
                                                      @LoginUser User loginUser) {
         CommentResponseDto updatedComment = commentService.updateComment(id, commentUpdateRequestDto, loginUser);
-        return ResponseEntity.ok(new ApiResponse(200, "정상 처리되었습니다.", updatedComment));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), updatedComment));
     }
 
     // 댓글 삭제
@@ -43,6 +40,6 @@ public class CommentController {
     public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long id,
                                                      @LoginUser User loginUser) {
         commentService.deleteComment(id, loginUser);
-        return ResponseEntity.ok(new ApiResponse(200, "정상 처리되었습니다.", null));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), null));
     }
 }
