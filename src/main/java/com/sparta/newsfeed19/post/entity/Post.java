@@ -33,7 +33,6 @@ public class Post extends TimeStamp {
 //    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
 //    private List<Comment> comments = new ArrayList<>();
 
-
     public void update(String title, String contents) {
         this.title = title;
         this.contents = contents;

@@ -1,16 +1,17 @@
 package com.sparta.newsfeed19.post.dto.response;
 
 import com.sparta.newsfeed19.user.User;
-import com.sparta.newsfeed19.user.dto.UserDto;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+// 다건 조회 responseDto
 public class PostDetailResponseDto {
 
     private final Long id;
-    private final UserDto user;
+    private final Long userId;
+    private final String email;
     private final String title;
     private final String contents;
 //    private final int commentCount;
@@ -26,7 +27,8 @@ public class PostDetailResponseDto {
             LocalDateTime updatedAt
     ){
         this.id = id;
-        this.user = new UserDto(user.getId(), user.getEmail());
+        this.userId = user.getId();
+        this.email = user.getEmail();
         this.title = title;
         this.contents = contents;
 //        this.commentCount = commentCount;
