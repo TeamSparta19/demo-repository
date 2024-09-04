@@ -4,22 +4,21 @@ import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
 import com.sparta.newsfeed19.post.dto.request.PostUpdateRequestDto;
-import com.sparta.newsfeed19.post.dto.response.PostDetailResponseDto;
-import com.sparta.newsfeed19.post.dto.response.PostSaveResponseDto;
-import com.sparta.newsfeed19.post.dto.response.PostSimpleResponseDto;
-import com.sparta.newsfeed19.post.dto.response.PostUpdateResponseDto;
+import com.sparta.newsfeed19.post.dto.response.*;
 import com.sparta.newsfeed19.post.entity.Post;
 import com.sparta.newsfeed19.post.repository.PostRepository;
 import com.sparta.newsfeed19.user.User;
 import com.sparta.newsfeed19.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -33,7 +32,6 @@ public class PostService {
     public PostSaveResponseDto savePost(PostSaveRequestDto postSaveRequestDto, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
-
         Post newPost = new Post(
                 postSaveRequestDto.getTitle(),
                 postSaveRequestDto.getContents(),
@@ -43,6 +41,7 @@ public class PostService {
 
         return new PostSaveResponseDto(
                 savedPost.getId(),
+                user,
                 savedPost.getTitle(),
                 savedPost.getContents(),
                 savedPost.getCreatedAt(),
@@ -61,7 +60,7 @@ public class PostService {
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
         // 작성자 일치 여부 확인 (필요한 경우)
-        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+        if(!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
             throw new ApiException(ResponseCode.INVALID_REQUEST);
         }
 
@@ -97,6 +96,7 @@ public class PostService {
     }
 
     // 게시물 수정
+    @Transactional
     public PostUpdateResponseDto updatePost(Long postId, PostUpdateRequestDto postUpdateRequestDto, String email) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
@@ -104,7 +104,7 @@ public class PostService {
         User currentUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
-        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+        if(!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
             throw new ApiException(ResponseCode.INVALID_REQUEST);
         }
 
@@ -124,17 +124,21 @@ public class PostService {
     }
 
     // 게시물 삭제
-    public void deletePost(Long postId, String email) {
+    public PostDeleteResponseDto deletePost(Long postId, String email) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
 
         User currentUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
-        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+        if(!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
             throw new ApiException(ResponseCode.INVALID_REQUEST);
         }
 
         postRepository.deleteById(postId);
+
+        return new PostDeleteResponseDto(
+                post.getId()
+        );
     }
 }

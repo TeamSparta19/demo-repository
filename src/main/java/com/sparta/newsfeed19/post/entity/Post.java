@@ -5,7 +5,9 @@ import com.sparta.newsfeed19.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Entity
 @Table(name = "post")
@@ -32,7 +34,6 @@ public class Post extends TimeStamp {
 
 //    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
 //    private List<Comment> comments = new ArrayList<>();
-
 
     public void update(String title, String contents) {
         this.title = title;

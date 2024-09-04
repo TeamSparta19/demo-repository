@@ -1,15 +1,16 @@
 package com.sparta.newsfeed19.post.dto.response;
 
-import com.sparta.newsfeed19.user.dto.UserDto;
+import com.sparta.newsfeed19.user.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+//
 public class PostSaveResponseDto {
 
     private final Long id;
-    private UserDto user;
+    private final User user;
     private final String title;
     private final String contents;
     private final LocalDateTime createdAt;
@@ -17,16 +18,14 @@ public class PostSaveResponseDto {
 
     public PostSaveResponseDto(
             Long id,
+            User user,
             String title,
             String contents,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ){
         this.id = id;
-        this.user = new UserDto(
-                user.getId(),
-                user.getEmail()
-        );
+        this.user = user;
         this.title = title;
         this.contents = contents;
         this.createdAt = createdAt;
