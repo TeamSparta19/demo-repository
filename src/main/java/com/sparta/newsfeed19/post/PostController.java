@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("/feat/post")
-//@RequiredArgsConstructor
+@RestController
+@RequestMapping("/feat/post")
+@RequiredArgsConstructor
 public class PostController {
 
-//    private final PostRepository postRepository;
-//    private final PostService postService;
-//    private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final PostService postService;
+    private final UserRepository userRepository;
 //
 //    @PostMapping
 //    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequsetDto requsetDto){

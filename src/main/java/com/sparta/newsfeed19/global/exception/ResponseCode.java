@@ -1,7 +1,9 @@
 package com.sparta.newsfeed19.global.exception;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
 
 @Getter
 public enum ResponseCode {
@@ -11,6 +13,9 @@ public enum ResponseCode {
 
     // 사용자 응답 코드
     NOT_FOUND_USER("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND),
+    EXIST_EMAIL("존재하는 이메일 입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    SAME_PASSWORD("기존 비밀번호와 일치합니다.", HttpStatus.BAD_REQUEST),
 
     // 게시물 응답 코드
     NOT_FOUND_POST("존재하지 않는 게시물입니다.", HttpStatus.NOT_FOUND),
