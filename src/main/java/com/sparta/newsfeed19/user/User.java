@@ -35,7 +35,7 @@ public class User extends TimeStamp {
         this.password = password;
     }
 
-    public void updateDeleteAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
+    public void updateDeleteAt() {
+        this.deletedAt = LocalDateTime.now();
     }
 }
