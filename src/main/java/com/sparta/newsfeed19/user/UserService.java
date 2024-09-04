@@ -103,8 +103,8 @@ public class UserService {
             throw new ApiException(INVALID_PASSWORD);
         }
 
-        user.updateDeleteAt(user.getDeletedAt());
+        user.updateDeleteAt();
 
-         userRepository.save(user);
+        userRepository.save(user);
     }
 }
