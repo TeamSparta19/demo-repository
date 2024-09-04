@@ -23,7 +23,7 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     public void follow(String email, FollowRequestDto followRequestDto) {
-        User requestUser = userRepository.findByEmail(email)
+        User requestUser = userRepository.findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
         if (Objects.equals(followRequestDto.getFollowingId(), requestUser.getId())) {
@@ -38,14 +38,14 @@ public class FollowService {
             throw new ApiException(ALREADY_FOLLOWED_USER);
         }
 
-        User followingUser = userRepository.findById(followRequestDto.getFollowingId())
+        User followingUser = userRepository.findByIdAndDeletedAtIsNull(followRequestDto.getFollowingId())
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
         followRepository.save(new Follow(requestUser, followingUser));
     }
 
     public void unfollow(String email, FollowRequestDto followRequestDto) {
-        User requestUser = userRepository.findByEmail(email)
+        User requestUser = userRepository.findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
         boolean isAlreadyFollow = requestUser.getFollowingList()

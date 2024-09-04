@@ -21,30 +21,6 @@ import static com.sparta.newsfeed19.global.exception.ResponseCode.SUCCESS;
 public class FollowController {
     private final FollowService followService;
 
-    @PostMapping("/v1/following")
-    public ResponseEntity<?> followV1(@RequestBody FollowRequestDto followRequestDto) {
-        followService.follow(followRequestDto.getEmail(), followRequestDto);
-        return new ResponseEntity<>(ApiResponse.setResponse(SUCCESS, null), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/v1/following")
-    public ResponseEntity<?> unfollowV1(@RequestBody FollowRequestDto followRequestDto) {
-        followService.unfollow(followRequestDto.getEmail(), followRequestDto);
-        return new ResponseEntity<>(ApiResponse.setResponse(SUCCESS, null), HttpStatus.OK);
-    }
-
-    @GetMapping("/v1/followers")
-    public ResponseEntity<?> getFollowerListV1(@RequestBody FollowRequestDto followRequestDto) {
-        List<FollowerResponseDto> followerList = followService.getFollowerList(followRequestDto.getEmail());
-        return new ResponseEntity<>(ApiResponse.setResponse(SUCCESS, followerList), HttpStatus.OK);
-    }
-
-    @GetMapping("/v1/following")
-    public ResponseEntity<?> getFollowingListV1(@RequestBody FollowRequestDto followRequestDto) {
-        List<FollowingResponseDto> followingList = followService.getFollowingList(followRequestDto.getEmail());
-        return new ResponseEntity<>(ApiResponse.setResponse(SUCCESS, followingList), HttpStatus.OK);
-    }
-
     @PostMapping("/following")
     public ResponseEntity<?> follow(@LoginUser String email, @Valid @RequestBody FollowRequestDto followRequestDto) {
         followService.follow(email, followRequestDto);

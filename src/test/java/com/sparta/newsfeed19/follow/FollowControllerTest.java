@@ -61,90 +61,6 @@ class FollowControllerTest {
     }
 
     @Test
-    @DisplayName("팔로우(v1)에 성공한다.")
-    public void follow_v1_success() throws Exception {
-        // given
-        FollowRequestDto followRequestDto = new FollowRequestDto(1L, "test@test.com");
-
-        willDoNothing().given(followService).follow(followRequestDto.getEmail(), followRequestDto);
-
-        // when, then
-        mockMvc.perform(post("/api/v1/following")
-                        .content(asJsonString(followRequestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("정상 처리되었습니다"));
-    }
-
-    @Test
-    @DisplayName("언팔로우(v1)에 성공한다.")
-    public void unfollow_v1_success() throws Exception {
-        // given
-        FollowRequestDto followRequestDto = new FollowRequestDto(1L, "test@test.com");
-
-        willDoNothing().given(followService).unfollow(followRequestDto.getEmail(), followRequestDto);
-
-        // when, then
-        mockMvc.perform(delete("/api/v1/following")
-                        .content(asJsonString(followRequestDto))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("정상 처리되었습니다"));
-    }
-
-    @Test
-    @DisplayName("팔로워 목록 조회(v1)에 성공한다.")
-    public void getFollowerList_v1_success() throws Exception {
-        // given
-        FollowRequestDto followRequestDto = new FollowRequestDto(null, "test@test.com");
-
-        FollowerResponseDto followerResponseDto1 = new FollowerResponseDto(1L);
-        FollowerResponseDto followerResponseDto2 = new FollowerResponseDto(2L);
-        FollowerResponseDto followerResponseDto3 = new FollowerResponseDto(3L);
-        List<FollowerResponseDto> followerResponseDtoList =
-                List.of(followerResponseDto1, followerResponseDto2, followerResponseDto3);
-
-        given(followService.getFollowerList(anyString())).willReturn(followerResponseDtoList);
-
-        // when, then
-        mockMvc.perform(get("/api/v1/followers")
-                        .content(asJsonString(followRequestDto))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$..['followerId']").exists());
-    }
-
-    @Test
-    @DisplayName("팔로잉 목록 조회(v1)에 성공한다.")
-    public void getFollowingList_v1_success() throws Exception {
-        // given
-        FollowRequestDto followRequestDto = new FollowRequestDto(null, "test@test.com");
-
-        FollowingResponseDto followingResponseDto1 = new FollowingResponseDto(1L);
-        FollowingResponseDto followingResponseDto2 = new FollowingResponseDto(2L);
-        FollowingResponseDto followingResponseDto3 = new FollowingResponseDto(3L);
-        List<FollowingResponseDto> followingResponseDtoList =
-                List.of(followingResponseDto1, followingResponseDto2, followingResponseDto3);
-
-        given(followService.getFollowingList(anyString())).willReturn(followingResponseDtoList);
-
-        // when, then
-        mockMvc.perform(get("/api/v1/following")
-                        .content(asJsonString(followRequestDto))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$..['followingId']").exists());
-    }
-
-    /** 최종 API 테스트 **/
-
-    @Test
     @DisplayName("팔로우에 성공한다.")
     public void follow_success() throws Exception {
         // given
@@ -177,7 +93,8 @@ class FollowControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("(언)팔로우 할 유저의 고유번호는 필수입니다."));
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.data").isArray());
     }
 
     @Test
@@ -212,7 +129,8 @@ class FollowControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("(언)팔로우 할 유저의 고유번호는 필수입니다."));
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.data").isArray());
     }
 
     @Test
