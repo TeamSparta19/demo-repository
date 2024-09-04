@@ -11,5 +11,5 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 생성일자 기준 내림순차 순으로 정렬
-    Page<Post> findAllByUserIdOrderByCreatedAtDesc(Long userId , Pageable pageable);
+    Page<Post> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 }

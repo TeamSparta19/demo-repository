@@ -32,7 +32,7 @@ public class PostService {
     @Transactional
     public PostSaveResponseDto savePost(PostSaveRequestDto postSaveRequestDto, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
         Post newPost = new Post(
                 postSaveRequestDto.getTitle(),
@@ -58,10 +58,10 @@ public class PostService {
 
         // 이메일로 현재 사용자 조회
         User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
         // 작성자 일치 여부 확인 (필요한 경우)
-        if(!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
             throw new ApiException(ResponseCode.INVALID_REQUEST);
         }
 
@@ -80,7 +80,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page - 1, size);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
         // 사용자의 게시물 조회
         Page<Post> posts = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), pageable);
@@ -102,9 +102,9 @@ public class PostService {
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
 
         User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
-        if(!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
             throw new ApiException(ResponseCode.INVALID_REQUEST);
         }
 
@@ -129,9 +129,9 @@ public class PostService {
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
 
         User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
-        if(!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
+        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
             throw new ApiException(ResponseCode.INVALID_REQUEST);
         }
 

@@ -9,8 +9,10 @@ public enum ResponseCode {
     SUCCESS( "정상 처리되었습니다.", HttpStatus.OK),
 
     // 사용자 응답 코드
-    USER_NOT_FOUND( "사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_USER("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND),
     EXIST_EMAIL("존재하는 이메일 입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_PASSWORD("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    SAME_PASSWORD("기존 비밀번호와 일치합니다.", HttpStatus.BAD_REQUEST),
     // 게시물 응답 코드
     POST_NOT_FOUND("게시물을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     POST_CREATION_FAILED( "게시물 생성에 실패했습니다.", HttpStatus.BAD_REQUEST),
