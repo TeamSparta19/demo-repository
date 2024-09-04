@@ -6,12 +6,12 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class SimpleResponseDto {
+public class GetUserResponseDto {
 
-        private String email;
-        private LocalDateTime createdAt;
+    private String email;
+    private LocalDateTime createdAt;
 
-    public SimpleResponseDto(User user) {
+    public GetUserResponseDto(User user) {
         this.email = user.getEmail();
         this.createdAt = user.getCreatedAt();
     }

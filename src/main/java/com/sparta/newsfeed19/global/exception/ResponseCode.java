@@ -26,7 +26,13 @@ public enum ResponseCode {
     INVALID_FOLLOW_REQUEST("자기 자신을 팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST),
     ALREADY_FOLLOWED_USER("이미 팔로우중인 사용자입니다.", HttpStatus.CONFLICT),
     ALREADY_UNFOLLOWED_USER("팔로우중이 아닌 사용자는 언팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST),
-    ;
+
+    // 토큰 응답 코드
+    REQUIRED_ACCESS_TOKEN("토큰이 필요합니다.", HttpStatus.BAD_REQUEST),
+    UNSUPPORTED_ACCESS_TOKEN("지원되지 않는 토큰입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_ACCESS_TOKEN("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    EXPIRE_ACCESS_TOKEN("유효 기간이 만료된 토큰입니다.", HttpStatus.UNAUTHORIZED),
+    FAIL_ACCESS_TOKEN_VALIDATION("토큰 검증에 실패하였습니다.", HttpStatus.UNAUTHORIZED);
 
     private final String message;
     private final HttpStatus code;

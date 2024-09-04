@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,18 +25,26 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     private String password;
 
+    @Column
+    private LocalDateTime deletedAt;
+
     @OneToMany(mappedBy = "following", orphanRemoval = true)
     private List<Follow> followerList;
 
     @OneToMany(mappedBy = "follower", orphanRemoval = true)
     private List<Follow> followingList;
 
-    public User(String email, String password) {
+    public User(String email, String password, LocalDateTime deletedAt) {
         this.email = email;
         this.password = password;
+        this.deletedAt = deletedAt;
     }
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateDeleteAt() {
+        this.deletedAt = LocalDateTime.now();
     }
 }
