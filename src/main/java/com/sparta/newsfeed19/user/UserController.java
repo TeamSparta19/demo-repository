@@ -2,11 +2,6 @@ package com.sparta.newsfeed19.user;
 
 import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
-import com.sparta.newsfeed19.user.dto.LoginRequestDto;
-import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
-import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
-import com.sparta.newsfeed19.global.common.response.ApiResponse;
-import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +26,6 @@ public class UserController {
     @PostMapping("/users/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto) {
         String bearerToken = userService.login(requestDto);
-
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS,bearerToken));
     }
 
@@ -45,7 +39,14 @@ public class UserController {
     public ResponseEntity<?> updateUserPassword(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserPasswordRequestDto updateUserRequestDto) {
-        UpdateUserPasswordResponseDto updateUserPasswordResponseDto = userService.updateUserPassword(id, updateUserRequestDto);
-        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, updateUserPasswordResponseDto));
+             userService.updateUserPassword(id, updateUserRequestDto);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
+    }
+
+    // 유저 삭제
+    @DeleteMapping("users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
+        userService.deleteUser(id,deleteUserRequestDto);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS,null));
     }
 }

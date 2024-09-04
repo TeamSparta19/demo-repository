@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.sparta.newsfeed19.global.exception.ResponseCode.*;
-import static java.util.regex.Pattern.matches;
 
 
 @Service
@@ -63,7 +62,6 @@ public class UserService {
 
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
         String token = jwtUtil.createToken(user.getEmail());
-        jwtUtil.addJwtToCookie(token);
 
         return token;
     }
@@ -76,25 +74,34 @@ public class UserService {
     }
 
     @Transactional
-    public UpdateUserPasswordResponseDto updateUserPassword(
+    public void updateUserPassword(
             Long userId,
             UpdateUserPasswordRequestDto updateUserRequestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
 
         // 비밀번호 수정 시, 본인 확인을 위해 입력한 현재 비밀번호가 일치하지 않은 경우
-        if (!matches(updateUserRequestDto.getOldPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(updateUserRequestDto.getOldPassword(), user.getPassword())) {
             throw new ApiException(INVALID_PASSWORD);
         }
         //현재 비밀번호와 동일한 비밀번호로 수정하는 경우
-        if (matches(updateUserRequestDto.getNewPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(updateUserRequestDto.getNewPassword(), user.getPassword())) {
             throw new ApiException(SAME_PASSWORD);
         }
 
-        user.updatePassword(updateUserRequestDto.getNewPassword());
+        user.updatePassword(passwordEncoder.encode(updateUserRequestDto.getNewPassword()));
+    }
 
-        return new UpdateUserPasswordResponseDto(
-        );
+    // 유저 삭제
+    @Transactional
+    public void deleteUser(Long id, DeleteUserRequestDto deleteUserRequestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
+        if (!passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
+            throw new ApiException(INVALID_PASSWORD);
+        }
+
+        userRepository.delete(user);
     }
 }
