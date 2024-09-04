@@ -29,7 +29,8 @@ public class UserService {
 
         User user = new User(
                 saveUserRequestDto.getEmail(),
-                passwordEncoder.encode(saveUserRequestDto.getPassword())
+                passwordEncoder.encode(saveUserRequestDto.getPassword()),
+                null
         );
 
         User savedUser = userRepository.save(user);
@@ -96,10 +97,13 @@ public class UserService {
     public void deleteUser(Long id, DeleteUserRequestDto deleteUserRequestDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+
         if (!passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
             throw new ApiException(INVALID_PASSWORD);
         }
 
-        userRepository.delete(user);
+        user.updateDeleteAt(user.getDeletedAt());
+
+         userRepository.save(user);
     }
 }
