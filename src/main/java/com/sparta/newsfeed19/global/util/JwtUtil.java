@@ -5,7 +5,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +57,7 @@ public class JwtUtil {
     }
 
     // JWT Cookie 에 저장
-    public void addJwtToCookie(String token, HttpServletResponse res) {
+    public void addJwtToCookie(String token) {
         try {
             token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
 
@@ -66,7 +65,6 @@ public class JwtUtil {
             cookie.setPath("/");
 
             // Response 객체에 Cookie 추가
-            res.addCookie(cookie);
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage());
         }

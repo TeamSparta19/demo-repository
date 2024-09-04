@@ -2,6 +2,11 @@ package com.sparta.newsfeed19.user;
 
 import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.user.dto.LoginRequestDto;
+import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
+import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
+import com.sparta.newsfeed19.global.common.response.ApiResponse;
+import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +34,10 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS,bearerToken));
     }
 
-   // 유저 조회
+    // 유저 조회
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id){
-        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS,userService.getUser(id)));
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, userService.getUser(id)));
     }
 
     @PatchMapping("users/{id}")
@@ -49,4 +54,5 @@ public class UserController {
         userService.deleteUser(id,deleteUserRequestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS,null));
     }
+
 }
