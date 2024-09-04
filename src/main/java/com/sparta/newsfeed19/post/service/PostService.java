@@ -1,5 +1,7 @@
 package com.sparta.newsfeed19.post.service;
 
+import com.sparta.newsfeed19.follow.Follow;
+import com.sparta.newsfeed19.follow.FollowRepository;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
@@ -9,24 +11,27 @@ import com.sparta.newsfeed19.post.entity.Post;
 import com.sparta.newsfeed19.post.repository.PostRepository;
 import com.sparta.newsfeed19.user.User;
 import com.sparta.newsfeed19.user.UserRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-@Slf4j
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
+    private final FollowRepository followRepository;
     // 게시물 저장 메서드
     @Transactional
     public PostSaveResponseDto savePost(PostSaveRequestDto postSaveRequestDto, String email) {
@@ -37,6 +42,7 @@ public class PostService {
                 postSaveRequestDto.getContents(),
                 user
         );
+
         Post savedPost = postRepository.save(newPost);
 
         return new PostSaveResponseDto(
@@ -73,16 +79,32 @@ public class PostService {
         );
     }
 
-    // 게시물 다건 조회 메서드
     @Transactional
     public Page<PostDetailResponseDto> getPosts(int page, int size, String email) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
+        // 현재 사용자의 이메일로 유저 정보 조회
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
 
+        // 트랜잭션 내에서 사용자의 팔로워 리스트와 팔로잉 리스트를 초기화
+        Hibernate.initialize(user.getFollowerList());
+        Hibernate.initialize(user.getFollowingList());
+
+        // 사용자가 팔로우한 유저들의 이메일 목록을 가져옴
+        List<Follow> follows = followRepository.findByFollowerEmail(email);
+        List<String> followingEmails = new ArrayList<>();
+
+        for (Follow follow : follows) {
+            followingEmails.add(follow.getFollowing().getEmail());
+        }
+
+
+        // 사용자의 이메일도 리스트에 추가하여 자신이 올린 게시물도 조회되도록 설정
+        followingEmails.add(email);
+
         // 사용자의 게시물 조회
-        Page<Post> posts = postRepository.findAllByUserIdOrderByCreatedAtDesc(user.getId(), pageable);
+        Page<Post> posts = postRepository.findAllByUserEmailInOrderByCreatedAtDesc(followingEmails, pageable);
 
         // Post 엔티티를 PostDetailResponseDto로 변환
         return posts.map(post -> new PostDetailResponseDto(

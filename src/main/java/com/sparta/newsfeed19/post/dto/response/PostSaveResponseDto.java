@@ -6,11 +6,11 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-//
+
 public class PostSaveResponseDto {
 
     private final Long id;
-    private final User user;
+    private final String email;
     private final String title;
     private final String contents;
     private final LocalDateTime createdAt;
@@ -25,7 +25,7 @@ public class PostSaveResponseDto {
             LocalDateTime updatedAt
     ){
         this.id = id;
-        this.user = user;
+        this.email = user.getEmail();
         this.title = title;
         this.contents = contents;
         this.createdAt = createdAt;

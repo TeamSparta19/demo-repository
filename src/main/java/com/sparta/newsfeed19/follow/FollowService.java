@@ -6,6 +6,7 @@ import com.sparta.newsfeed19.follow.dto.FollowingResponseDto;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.user.User;
 import com.sparta.newsfeed19.user.UserRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
 
+    @Transactional
     public void follow(String email, FollowRequestDto followRequestDto) {
         User requestUser = userRepository.findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
@@ -44,6 +46,7 @@ public class FollowService {
         followRepository.save(new Follow(requestUser, followingUser));
     }
 
+    @Transactional
     public void unfollow(String email, FollowRequestDto followRequestDto) {
         User requestUser = userRepository.findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
@@ -59,6 +62,7 @@ public class FollowService {
         followRepository.deleteByFollowerIdAndFollowingId(requestUser.getId(), followRequestDto.getFollowingId());
     }
 
+    @Transactional
     public List<FollowerResponseDto> getFollowerList(String email) {
         return followRepository.findByFollowingEmail(email)
                 .stream()
@@ -66,6 +70,7 @@ public class FollowService {
                 .toList();
     }
 
+    @Transactional
     public List<FollowingResponseDto> getFollowingList(String email) {
         return followRepository.findByFollowerEmail(email)
                 .stream()

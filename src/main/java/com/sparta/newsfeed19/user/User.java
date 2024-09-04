@@ -1,5 +1,6 @@
 package com.sparta.newsfeed19.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.newsfeed19.follow.Follow;
 import com.sparta.newsfeed19.global.common.entity.TimeStamp;
 import jakarta.persistence.*;
