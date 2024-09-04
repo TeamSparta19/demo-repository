@@ -32,7 +32,8 @@ public class UserService {
 
         User user = new User(
                 saveUserRequestDto.getEmail(),
-                passwordEncoder.encode(saveUserRequestDto.getPassword())
+                passwordEncoder.encode(saveUserRequestDto.getPassword()),
+                null
         );
 
         User savedUser = userRepository.save(user);
@@ -102,6 +103,8 @@ public class UserService {
             throw new ApiException(INVALID_PASSWORD);
         }
 
-        userRepository.delete(user);
+        user.updateDeleteAt(user.getDeletedAt());
+
+         userRepository.save(user);
     }
 }

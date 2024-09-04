@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -21,12 +23,20 @@ public class User extends TimeStamp {
     @Column(nullable = false)
     private String password;
 
-    public User(String email, String password) {
+    @Column
+    private LocalDateTime deletedAt;
+
+    public User(String email, String password, LocalDateTime deletedAt) {
         this.email = email;
         this.password = password;
+        this.deletedAt = deletedAt;
     }
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateDeleteAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }
