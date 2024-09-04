@@ -17,10 +17,14 @@ public enum ResponseCode {
     POST_NOT_FOUND("게시물을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     POST_CREATION_FAILED( "게시물 생성에 실패했습니다.", HttpStatus.BAD_REQUEST),
     POST_UPDATE_FAILED( "게시물 수정에 실패했습니다.", HttpStatus.BAD_REQUEST),
-    INVALID_REQUEST("인증 요청에 실패했습니다", HttpStatus.BAD_REQUEST );
+    INVALID_REQUEST("인증 요청에 실패했습니다", HttpStatus.BAD_REQUEST ),
 
     // 댓글 응답 코드
-
+    NOT_FOUND_COMMENT("존재하지 않는 댓글입니다.", HttpStatus.NOT_FOUND),
+    COMMENT_CREATION_FAILED("댓글 생성에 실패했습니다.", HttpStatus.BAD_REQUEST),
+    COMMENT_UPDATE_FAILED("댓글 수정에 실패했습니다.", HttpStatus.BAD_REQUEST),
+    COMMENT_PERMISSION_DENIED("댓글에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
+    EMPTY_COMMENT_CONTENT("댓글 내용이 비어 있습니다.", HttpStatus.BAD_REQUEST);
     // 팔로우 응답 코드
 
     private final String message;
