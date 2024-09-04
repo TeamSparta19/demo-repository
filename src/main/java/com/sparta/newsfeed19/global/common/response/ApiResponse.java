@@ -1,10 +1,15 @@
 package com.sparta.newsfeed19.global.common.response;
 
+import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
+@ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse {
     private int code;
@@ -13,5 +18,9 @@ public class ApiResponse {
 
     public static <T> ApiResponse setResponse(ResponseCode responseCode, T data) {
         return new ApiResponse(responseCode.getCode().value(), responseCode.getMessage(), data);
+    }
+
+    public static <T> ApiResponse setResponse(ApiException apiException, T data) {
+        return new ApiResponse(apiException.getCode().value(), apiException.getMessage(), data);
     }
 }
