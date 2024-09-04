@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class User extends TimeStamp {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -22,6 +22,10 @@ public class User extends TimeStamp {
 
     public User(String email, String password) {
         this.email = email;
+        this.password = password;
+    }
+
+    public void updatePassword(String password) {
         this.password = password;
     }
 }
