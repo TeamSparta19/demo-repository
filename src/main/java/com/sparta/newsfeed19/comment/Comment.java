@@ -3,7 +3,6 @@ package com.sparta.newsfeed19.comment;
 
 import com.sparta.newsfeed19.global.common.entity.TimeStamp;
 import com.sparta.newsfeed19.post.entity.Post;
-import com.sparta.newsfeed19.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
