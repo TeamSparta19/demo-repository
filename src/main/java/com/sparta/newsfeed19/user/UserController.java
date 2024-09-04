@@ -1,5 +1,6 @@
 package com.sparta.newsfeed19.user;
 
+import com.sparta.newsfeed19.global.annotation.LoginUser;
 import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.user.dto.*;
@@ -36,20 +37,23 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, getUserResponseDto));
     }
 
-
     // 유저 수정
     @PatchMapping("users/{id}")
     public ResponseEntity<?> updateUserPassword(
+            @LoginUser String email,
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserPasswordRequestDto updateUserRequestDto) {
-        userService.updateUserPassword(id, updateUserRequestDto);
+        userService.updateUserPassword(email, id, updateUserRequestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
     }
 
     // 유저 삭제
     @DeleteMapping("users/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
-        userService.deleteUser(id, deleteUserRequestDto);
+    public ResponseEntity<?> deleteUser(
+            @LoginUser String email,
+            @PathVariable Long id,
+            @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
+        userService.deleteUser(email, id, deleteUserRequestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
     }
 
