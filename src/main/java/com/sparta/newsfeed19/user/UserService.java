@@ -50,8 +50,6 @@ public class UserService {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
 
-
-
         // 사용자 확인
         User user = userRepository.findByEmail(email).orElseThrow(
                 ()->new IllegalArgumentException("등록된 회원이 없습니다.")
@@ -67,18 +65,5 @@ public class UserService {
         String token = jwtUtil.createToken(user.getEmail());
         jwtUtil.addJwtToCookie(token, res);
 
-    }
-
-    // JWT에서 이메일을 추출하여 현재 유저를 가져오는 메서드
-    public User getCurrentUser(HttpServletRequest request) {
-        // 요청 헤더에서 JWT 토큰을 가져옴
-        String token = jwtUtil.substringToken(request.getHeader(JwtUtil.AUTHORIZATION_HEADER));
-
-        // JWT 토큰에서 이메일을 추출
-        String email = String.valueOf(jwtUtil.getUserInfoFromToken(token)); // 이메일이 직접 반환된다고 가정
-
-        // 이메일로 사용자 조회
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new ApiException(ResponseCode.USER_NOT_FOUND));
     }
 }

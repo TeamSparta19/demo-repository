@@ -27,6 +27,7 @@ public class JwtFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        System.out.println("?????????????????????");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -39,6 +40,7 @@ public class JwtFilter implements Filter {
 
         String bearerJwt = httpRequest.getHeader("Authorization");
 
+        System.out.println("bearerjwt"+bearerJwt);
         if (bearerJwt == null || !bearerJwt.startsWith("Bearer ")) {
             // 토큰이 없는 경우 400을 반환합니다.
             httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT 토큰이 필요합니다.");
@@ -54,6 +56,8 @@ public class JwtFilter implements Filter {
             // 사용자 정보를 ArgumentResolver 로 넘기기 위해 HttpServletRequest 에 세팅
             httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
             httpRequest.setAttribute("email", claims.get("email", String.class));
+            System.out.println("userId"+ Long.parseLong(claims.getSubject()));
+            System.out.println("email"+ claims.get("email", String.class));
 
             chain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {

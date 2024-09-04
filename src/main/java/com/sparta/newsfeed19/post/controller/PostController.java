@@ -1,12 +1,15 @@
 package com.sparta.newsfeed19.post.controller;
 
-import com.sparta.newsfeed19.global.util.JwtUtil;
+import com.sparta.newsfeed19.global.annotation.LoginUser;
+import com.sparta.newsfeed19.global.common.response.ApiResponse;
+import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
+import com.sparta.newsfeed19.post.dto.request.PostUpdateRequestDto;
+import com.sparta.newsfeed19.post.dto.response.PostDetailResponseDto;
+import com.sparta.newsfeed19.post.dto.response.PostSaveResponseDto;
+import com.sparta.newsfeed19.post.dto.response.PostSimpleResponseDto;
+import com.sparta.newsfeed19.post.dto.response.PostUpdateResponseDto;
 import com.sparta.newsfeed19.post.service.PostService;
-import com.sparta.newsfeed19.post.dto.request.*;
-import com.sparta.newsfeed19.post.dto.response.*;
-import com.sparta.newsfeed19.user.User;
-import com.sparta.newsfeed19.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,49 +21,56 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
-    private final JwtUtil jwtUtil;
-    private final UserService userService;
 
     // 게시물 등록
     @PostMapping
-    public ResponseEntity<PostSaveResponseDto> savePost(@RequestBody PostSaveRequestDto requestDto) {
-        return ResponseEntity.ok(postService.savePost(requestDto));
+    public ResponseEntity<ApiResponse> savePost(
+            @RequestBody PostSaveRequestDto requestDto,
+            @LoginUser String email // 로그인된 사용자 정보 자동 주입
+    ) {
+        PostSaveResponseDto responseDto = postService.savePost(requestDto, email);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, responseDto));
     }
-
-    // 게시물 조회 (다건, 페이지네이션)
-    @GetMapping("/feed")
-    public ResponseEntity<Page<PostDetailResponseDto>> getPosts(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
-            HttpServletRequest request) {
-
-        // 현재 사용자 이메일을 기반으로 뉴스피드 조회
-        User currentUser = userService.getCurrentUser(request);
-        String email = currentUser.getEmail();
-        Page<PostDetailResponseDto> posts = postService.getPosts(page, size, email);
-        return ResponseEntity.ok(posts);
-    }
-
-
 
     // 게시물 조회 단건
     @GetMapping("/{postId}")
-    public ResponseEntity<PostSimpleResponseDto> getPost(@PathVariable("postId") Long postId) {
-        return ResponseEntity.ok(postService.getPost(postId));
+    public ResponseEntity<ApiResponse> getPost(
+            @PathVariable("postId") Long postId,
+            @LoginUser String email
+    ) {
+        PostSimpleResponseDto post = postService.getPost(postId, email);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, post));
+    }
+
+    // 게시물 조회 다건
+    @GetMapping("/feed")
+    public ResponseEntity<ApiResponse> getPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @LoginUser String email // 로그인된 사용자 정보 자동 주입
+    ) {
+        Page<PostDetailResponseDto> posts = postService.getPosts(page, size, email);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, posts));
     }
 
     // 게시물 수정
     @PutMapping("/{postId}")
-    public ResponseEntity<PostUpdateResponseDto> updatePost(
+    public ResponseEntity<ApiResponse> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostUpdateRequestDto postUpdateRequestDto) {
-        return ResponseEntity.ok(postService.updatePost(postId, postUpdateRequestDto));
+            @RequestBody PostUpdateRequestDto postUpdateRequestDto,
+            @LoginUser String email
+    ) {
+        PostUpdateResponseDto response = postService.updatePost(postId, postUpdateRequestDto, email);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, response));
     }
 
     // 게시물 삭제
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId, HttpServletRequest request) {
-        postService.deletePost(postId, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ApiResponse> deletePost(
+            @PathVariable Long postId,
+            @LoginUser String email
+    ) {
+        postService.deletePost(postId, email);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
     }
 }
