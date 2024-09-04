@@ -1,14 +1,17 @@
 package com.sparta.newsfeed19.user;
 
+import com.sparta.newsfeed19.user.dto.SimpleResponseDto;
 import com.sparta.newsfeed19.global.config.PasswordEncoder;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.global.util.JwtUtil;
+import com.sparta.newsfeed19.user.dto.LoginRequestDto;
+import com.sparta.newsfeed19.user.dto.SaveUserRequestDto;
+import com.sparta.newsfeed19.user.dto.SaveUserResponseDto;
 import com.sparta.newsfeed19.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import static com.sparta.newsfeed19.global.exception.ResponseCode.*;
 
 
@@ -49,12 +52,12 @@ public class UserService {
 
         // 사용자 확인
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("등록된 회원이 없습니다.")
+                ()->new IllegalArgumentException("등록된 회원이 없습니다.")
         );
 
         // 비밀번호 확인 인코딩 버전
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (!passwordEncoder.matches(password,user.getPassword())) {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
@@ -66,13 +69,12 @@ public class UserService {
     //유저 조회
     public SimpleResponseDto getUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
+                .orElseThrow(()-> new ApiException(ResponseCode.NOT_FOUND_USER));
         return new SimpleResponseDto(user);
     }
 
-    //유저 수정
     @Transactional
-    public UpdateUserPasswordResponseDto updateUserPassword(
+    public void updateUserPassword(
             Long userId,
             UpdateUserPasswordRequestDto updateUserRequestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
@@ -88,11 +90,18 @@ public class UserService {
         }
 
         user.updatePassword(passwordEncoder.encode(updateUserRequestDto.getNewPassword()));
-        userRepository.save(user);
-
-        return new UpdateUserPasswordResponseDto(
-        );
-
     }
 
+    // 유저 삭제
+    @Transactional
+    public void deleteUser(Long id, DeleteUserRequestDto deleteUserRequestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+
+        if (!passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
+            throw new ApiException(INVALID_PASSWORD);
+        }
+
+        userRepository.delete(user);
+    }
 }
