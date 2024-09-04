@@ -59,6 +59,7 @@ public class UserService {
 
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
         String token = jwtUtil.createToken(user.getEmail());
+        jwtUtil.addJwtToCookie(token);
 
         return token;
     }
@@ -70,9 +71,8 @@ public class UserService {
         return new SimpleResponseDto(user);
     }
 
-    //유저 수정
     @Transactional
-    public UpdateUserPasswordResponseDto updateUserPassword(
+    public void updateUserPassword(
             Long userId,
             UpdateUserPasswordRequestDto updateUserRequestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
@@ -89,10 +89,17 @@ public class UserService {
 
         user.updatePassword(passwordEncoder.encode(updateUserRequestDto.getNewPassword()));
         userRepository.save(user);
-
-        return new UpdateUserPasswordResponseDto(
-        );
-
     }
 
+    // 유저 삭제
+    @Transactional
+    public void deleteUser(Long id, DeleteUserRequestDto deleteUserRequestDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+        if (!passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
+            throw new ApiException(INVALID_PASSWORD);
+        }
+
+        userRepository.delete(user);
+    }
 }
