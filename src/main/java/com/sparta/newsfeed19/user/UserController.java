@@ -50,7 +50,7 @@ public class UserController {
     @DeleteMapping("users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
         userService.deleteUser(id, deleteUserRequestDto);
-        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS,null));
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
     }
 
 }

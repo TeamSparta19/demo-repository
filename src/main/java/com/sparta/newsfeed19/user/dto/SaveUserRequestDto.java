@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class SaveUserRequestDto {
-
     @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
             message = "잘못된 이메일 양식입니다.")
     private String email;
