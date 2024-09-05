@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @Table(name = "post")
@@ -27,10 +30,14 @@ public class Post extends TimeStamp {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Comment> commentList;
+
     private Post(String title, String contents, User user) {
         this.title = title;
         this.contents = contents;
         this.user = user;
+        this.commentList = new ArrayList<>();
     }
 
     public static Post from(PostSaveRequestDto postSaveRequestDto, User user) {

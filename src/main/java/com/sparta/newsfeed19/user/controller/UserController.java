@@ -31,7 +31,7 @@ public class UserController {
 
     // 유저 로그인
     @PostMapping("/users/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<ApiResponse> login(@Valid @RequestBody LoginRequestDto requestDto) {
         String bearerToken = userService.login(requestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, bearerToken));
     }
@@ -58,7 +58,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> deleteUser(
             @LoginUser String email,
             @PathVariable Long id,
-            @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
+            @Valid @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
         userService.deleteUser(email, id, deleteUserRequestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
     }
