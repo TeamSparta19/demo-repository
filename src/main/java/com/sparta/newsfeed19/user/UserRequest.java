@@ -1,6 +1,6 @@
 package com.sparta.newsfeed19.user;
 
-import com.sparta.newsfeed19.comment.CommentRepository;
+import com.sparta.newsfeed19.comment.repository.CommentRepository;
 import com.sparta.newsfeed19.follow.FollowRepository;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.post.repository.PostRepository;

@@ -1,10 +1,10 @@
-package com.sparta.newsfeed19.comment.dto;
+package com.sparta.newsfeed19.comment.dto.response;
 
+import com.sparta.newsfeed19.comment.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
 
 @Getter
 @NoArgsConstructor
@@ -21,5 +21,15 @@ public class CommentResponseDto {
         this.contents = contents;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static CommentResponseDto from(Comment comment) {
+        return new CommentResponseDto(
+                comment.getCommentId(),
+                comment.getUser().getEmail(),
+                comment.getContents(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        );
     }
 }
