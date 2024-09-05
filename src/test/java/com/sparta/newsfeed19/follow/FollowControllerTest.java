@@ -22,6 +22,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -65,7 +66,7 @@ class FollowControllerTest {
     public void follow_success() throws Exception {
         // given
         String email = "test@test.com";
-        FollowRequestDto followRequestDto = new FollowRequestDto(1L, null);
+        FollowRequestDto followRequestDto = new FollowRequestDto(1L);
 
         willDoNothing().given(followService).follow(email, followRequestDto);
 
@@ -83,7 +84,7 @@ class FollowControllerTest {
     public void follow_validation_failure() throws Exception {
         // given
         String email = "test@test.com";
-        FollowRequestDto followRequestDto = new FollowRequestDto(null, null);
+        FollowRequestDto followRequestDto = new FollowRequestDto(null);
 
         willDoNothing().given(followService).follow(email, followRequestDto);
 
@@ -101,9 +102,9 @@ class FollowControllerTest {
     @DisplayName("언팔로우에 성공한다.")
     public void unfollow_success() throws Exception {
         // given
-        FollowRequestDto followRequestDto = new FollowRequestDto(1L, null);
+        FollowRequestDto followRequestDto = new FollowRequestDto(1L);
 
-        willDoNothing().given(followService).unfollow(followRequestDto.getEmail(), followRequestDto);
+        willDoNothing().given(followService).unfollow(anyString(), any(FollowRequestDto.class));
 
         // when, then
         mockMvc.perform(delete("/api/following")
@@ -119,7 +120,7 @@ class FollowControllerTest {
     public void unfollow_validation_failure() throws Exception {
         // given
         String email = "test@test.com";
-        FollowRequestDto followRequestDto = new FollowRequestDto(null, null);
+        FollowRequestDto followRequestDto = new FollowRequestDto(null);
 
         willDoNothing().given(followService).follow(email, followRequestDto);
 
