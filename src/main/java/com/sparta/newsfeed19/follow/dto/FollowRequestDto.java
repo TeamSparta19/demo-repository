@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class FollowRequestDto {
     @NotNull(message = "(언)팔로우 할 유저의 고유번호는 필수입니다.")
     private Long followingId;
-    private String email;
 }
