@@ -6,6 +6,7 @@ import com.sparta.newsfeed19.comment.dto.response.CommentResponseDto;
 import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.annotation.LoginUser;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class CommentController {
     // 댓글 등록
     @PostMapping
     public ResponseEntity<ApiResponse> createComment(@RequestBody CommentRequestDto commentRequestDto,
-                                                     @LoginUser String email) {
+                                                     @LoginUser String email) {  // 이메일로 변경
         CommentResponseDto createdComment = commentService.createComment(commentRequestDto, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), createdComment));
     }
@@ -31,7 +32,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updateComment(@PathVariable Long id,
                                                      @RequestBody CommentUpdateRequestDto commentUpdateRequestDto,
-                                                     @LoginUser String email) {
+                                                     @LoginUser String email) {  // 이메일로 변경
         CommentResponseDto updatedComment = commentService.updateComment(id, commentUpdateRequestDto, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), updatedComment));
     }
@@ -39,7 +40,7 @@ public class CommentController {
     // 댓글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long id,
-                                                     @LoginUser String email) {
+                                                     @LoginUser String email) {  // 이메일로 변경
         commentService.deleteComment(id, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), null));
     }
