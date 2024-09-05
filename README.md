@@ -2,7 +2,7 @@
 
 ## 개요
 
-이 프로젝트는 사용자가 
+입력 바랍니다 
 
 ## 와이어프레임
 
@@ -25,12 +25,12 @@
 ### 게시물 관리
 
 | 메서드 | 설명             | 엔드포인트           | 요청 헤더                             | 요청 바디                                    | 응답 예시                                |
-|--------|------------------|----------------------|----------------------------------------|----------------------------------------------|-----------------------------------------|
-| POST   | 게시물 등록       | /api/post            | `Authorization: Bearer <token>`        | `{ "title": "", "contents": "" }`            | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { "title": "", "contents": "", "email": "", "createdAt": "" } }` |
-| GET    | 게시물 목록 조회   | /api/post/feed       | `Authorization: Bearer <token>`        | 없음 (쿼리 파라미터: `pageNumber`, `pageSize`, `sort`) | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { ... } }` (페이지네이션 데이터 포함) |
-| GET    | 게시물 단건 조회   | /api/post/{postId}   | `Authorization: Bearer <token>`        | 없음                                         | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { "title": "", "contents": "", "email": "", "createdAt": "", "updatedAt": "" } }` |
-| PATCH  | 게시물 수정       | /api/post/{postId}   | `Authorization: Bearer <token>`        | `{ "title": "", "contents": "" }`            | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { "title": "", "contents": "", "email": "", "createdAt": "", "updatedAt": "" } }` |
-| DELETE | 게시물 삭제       | /api/post/{postId}   | `Authorization: Bearer <token>`        | 없음                                         | `{ "code": 200, "message": "정상 처리되었습니다.", "data": null }` |
+|--------|------------------|----------------------|----------------------------------------|--------------------------------------------------------|-----------------------------------------|
+| POST   | 게시물 등록       | /api/post            | `Authorization: Bearer <token>`        | `{ "title": "", "contents": "" }`                       | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { "title": "", "contents": "", "email": "", "createdAt": "" } }` |
+| GET    | 게시물 목록 조회   | /api/post/feed       | `Authorization: Bearer <token>`        | 없음 (쿼리 파라미터: `pageNumber`, `pageSize`, `sort`)   | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { ... } }` (페이지네이션 데이터 포함) |
+| GET    | 게시물 단건 조회   | /api/post/{postId}   | `Authorization: Bearer <token>`        | 없음                                                    | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { "title": "", "contents": "", "email": "", "createdAt": "", "updatedAt": "" } }` |
+| PATCH  | 게시물 수정       | /api/post/{postId}   | `Authorization: Bearer <token>`        | `{ "title": "", "contents": "" }`                       | `{ "code": 200, "message": "정상 처리되었습니다.", "data": { "title": "", "contents": "", "email": "", "createdAt": "", "updatedAt": "" } }` |
+| DELETE | 게시물 삭제       | /api/post/{postId}   | `Authorization: Bearer <token>`        | 없음                                                    | `{ "code": 200, "message": "정상 처리되었습니다.", "data": null }` |
 
 ### 댓글 관리
 
