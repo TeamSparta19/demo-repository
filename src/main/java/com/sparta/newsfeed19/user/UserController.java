@@ -18,28 +18,28 @@ public class UserController {
 
     // 유저 등록(회원가입)
     @PostMapping("/users")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody SaveUserRequestDto saveUserRequestDto) {
+    public ResponseEntity<ApiResponse> saveUser(@Valid @RequestBody SaveUserRequestDto saveUserRequestDto) {
         SaveUserResponseDto saveUserResponseDto = userService.saveUser(saveUserRequestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, saveUserResponseDto));
     }
 
     // 유저 로그인
     @PostMapping("/users/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequestDto requestDto) {
         String bearerToken = userService.login(requestDto);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, bearerToken));
     }
 
     // 유저 조회
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getUser(@PathVariable Long id) {
         GetUserResponseDto getUserResponseDto = userService.getUser(id);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, getUserResponseDto));
     }
 
     // 유저 수정
     @PatchMapping("users/{id}")
-    public ResponseEntity<?> updateUserPassword(
+    public ResponseEntity<ApiResponse> updateUserPassword(
             @LoginUser String email,
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserPasswordRequestDto updateUserRequestDto) {
@@ -49,7 +49,7 @@ public class UserController {
 
     // 유저 삭제
     @DeleteMapping("users/{id}")
-    public ResponseEntity<?> deleteUser(
+    public ResponseEntity<ApiResponse> deleteUser(
             @LoginUser String email,
             @PathVariable Long id,
             @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
