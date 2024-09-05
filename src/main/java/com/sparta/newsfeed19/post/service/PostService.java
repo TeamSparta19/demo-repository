@@ -43,23 +43,13 @@ public class PostService {
     }
 
     // 게시물 단건 조회 메서드
-    @Transactional
-    public PostSimpleResponseDto getPost(Long postId, String email) {
+    public PostSimpleResponseDto getPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
-
-        // 이메일로 현재 사용자 조회
-        User currentUser = userRepository.findActiveUserByEmail(email);
-
-        // 작성자 일치 여부 확인 (필요한 경우)
-        if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
-            throw new ApiException(ResponseCode.INVALID_REQUEST);
-        }
 
         return PostSimpleResponseDto.from(post);
     }
 
-    @Transactional
     public Page<PostDetailResponseDto> getPosts(Pageable pageable, String email) {
         // 현재 사용자의 이메일로 유저 정보 조회
         userRepository.existsActiveUserByEmail(email);
@@ -91,7 +81,7 @@ public class PostService {
         User currentUser = userRepository.findActiveUserByEmail(email);
 
         if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
-            throw new ApiException(ResponseCode.INVALID_REQUEST);
+            throw new ApiException(ResponseCode.UNAUTHORIZED_UPDATE_POST);
         }
 
         post.update(
@@ -103,6 +93,7 @@ public class PostService {
     }
 
     // 게시물 삭제
+    @Transactional
     public PostDeleteResponseDto deletePost(Long postId, String email) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
@@ -110,7 +101,7 @@ public class PostService {
         User currentUser = userRepository.findActiveUserByEmail(email);
 
         if (!ObjectUtils.nullSafeEquals(currentUser.getId(), post.getUser().getId())) {
-            throw new ApiException(ResponseCode.INVALID_REQUEST);
+            throw new ApiException(ResponseCode.UNAUTHORIZED_DELETE_POST);
         }
 
         postRepository.deleteById(postId);

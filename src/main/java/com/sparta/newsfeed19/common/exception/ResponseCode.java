@@ -21,6 +21,8 @@ public enum ResponseCode {
     POST_NOT_FOUND("게시물을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     POST_CREATION_FAILED("게시물 생성에 실패했습니다.", HttpStatus.BAD_REQUEST),
     POST_UPDATE_FAILED("게시물 수정에 실패했습니다.", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED_UPDATE_POST("게시물 수정 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED_DELETE_POST("게시물 삭제 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
 
     // 댓글 응답 코드
     NOT_FOUND_COMMENT("존재하지 않는 댓글입니다.", HttpStatus.NOT_FOUND),

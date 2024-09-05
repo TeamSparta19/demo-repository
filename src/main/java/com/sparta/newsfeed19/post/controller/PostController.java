@@ -36,10 +36,9 @@ public class PostController {
     // 게시물 조회 단건
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse> getPost(
-            @PathVariable("postId") Long postId,
-            @LoginUser String email
+            @PathVariable("postId") Long postId
     ) {
-        PostSimpleResponseDto post = postService.getPost(postId, email);
+        PostSimpleResponseDto post = postService.getPost(postId);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, post));
     }
 
