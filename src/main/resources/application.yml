@@ -21,6 +21,7 @@ spring:
   data:
     web:
       pageable:
+        one-indexed-parameters: true
         page-parameter: pageNumber
         size-parameter: pageSize
 
