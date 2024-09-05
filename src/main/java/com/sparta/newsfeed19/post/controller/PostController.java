@@ -5,10 +5,7 @@ import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
 import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
 import com.sparta.newsfeed19.post.dto.request.PostUpdateRequestDto;
-import com.sparta.newsfeed19.post.dto.response.PostDetailResponseDto;
-import com.sparta.newsfeed19.post.dto.response.PostSaveResponseDto;
-import com.sparta.newsfeed19.post.dto.response.PostSimpleResponseDto;
-import com.sparta.newsfeed19.post.dto.response.PostUpdateResponseDto;
+import com.sparta.newsfeed19.post.dto.response.*;
 import com.sparta.newsfeed19.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -70,7 +67,7 @@ public class PostController {
             @PathVariable Long postId,
             @LoginUser String email
     ) {
-        postService.deletePost(postId, email);
-        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
+        PostDeleteResponseDto response = postService.deletePost(postId, email);
+        return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, response));
     }
 }
