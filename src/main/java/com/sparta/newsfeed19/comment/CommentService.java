@@ -8,15 +8,20 @@ import com.sparta.newsfeed19.post.entity.Post;
 import com.sparta.newsfeed19.post.repository.PostRepository;
 import com.sparta.newsfeed19.user.User;
 import com.sparta.newsfeed19.user.UserRepository;
-import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional // 클래스 레벨에 @Transactional을 적용하여 모든 메서드에 기본 트랜잭션 설정
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -24,7 +29,6 @@ public class CommentService {
     private final PostRepository postRepository;
 
     // 댓글 생성
-    @Transactional
     public CommentResponseDto createComment(CommentRequestDto commentRequestDto, String email) {
         if (!StringUtils.hasText(commentRequestDto.getContents())) {
             throw new ApiException(ResponseCode.EMPTY_COMMENT_CONTENT);
@@ -33,12 +37,12 @@ public class CommentService {
         // 이메일을 통해 영속 상태의 사용자 엔티티 조회
         User persistedUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
-        System.out.println("Persisted User ID: " + persistedUser.getId());
+        log.info("Persisted User ID: {}", persistedUser.getId());
 
         // 영속 상태의 게시물 엔티티 조회
         Post post = postRepository.findById(commentRequestDto.getPostId())
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
-        System.out.println("Persisted Post ID: " + post.getId());
+        log.info("Persisted Post ID: {}", post.getId());
 
         // 새로운 댓글 생성 및 저장
         Comment comment = new Comment(persistedUser, post, commentRequestDto.getContents());
@@ -54,7 +58,6 @@ public class CommentService {
     }
 
     // 댓글 수정
-    @Transactional
     public CommentResponseDto updateComment(Long commentId, CommentUpdateRequestDto commentUpdateRequestDto, String email) {
         if (!StringUtils.hasText(commentUpdateRequestDto.getContents())) {
             throw new ApiException(ResponseCode.EMPTY_COMMENT_CONTENT);
@@ -87,7 +90,6 @@ public class CommentService {
     }
 
     // 댓글 삭제
-    @Transactional
     public void deleteComment(Long commentId, String email) {
         // 이메일을 통해 영속 상태의 사용자 엔티티 조회
         User persistedUser = userRepository.findByEmail(email)
@@ -104,5 +106,74 @@ public class CommentService {
 
         // 댓글 삭제
         commentRepository.delete(comment);
+    }
+
+    // 특정 게시물에 대한 모든 댓글 조회
+    @Transactional(readOnly = true) // 조회 메서드에만 readOnly 적용
+    public List<CommentResponseDto> getCommentsByPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
+
+        List<Comment> comments = commentRepository.findByPost(post);
+
+        return comments.stream().map(comment -> new CommentResponseDto(
+                comment.getCommentId(),
+                comment.getUser().getEmail(),
+                comment.getContents(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        )).collect(Collectors.toList());
+    }
+
+    // 특정 사용자가 작성한 모든 댓글 조회
+    @Transactional(readOnly = true) // 조회 메서드에만 readOnly 적용
+    public List<CommentResponseDto> getCommentsByUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
+
+        List<Comment> comments = commentRepository.findByUser(user);
+
+        return comments.stream().map(comment -> new CommentResponseDto(
+                comment.getCommentId(),
+                comment.getUser().getEmail(),
+                comment.getContents(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        )).collect(Collectors.toList());
+    }
+
+    // 댓글 ID로 댓글 조회
+    @Transactional(readOnly = true) // 조회 메서드에만 readOnly 적용
+    public CommentResponseDto getCommentById(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_COMMENT));
+
+        return new CommentResponseDto(
+                comment.getCommentId(),
+                comment.getUser().getEmail(),
+                comment.getContents(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        );
+    }
+
+    // 특정 게시물에 대한 특정 사용자의 모든 댓글 조회
+    @Transactional(readOnly = true) // 조회 메서드에만 readOnly 적용
+    public List<CommentResponseDto> getCommentsByPostAndUser(Long postId, String email) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
+
+        List<Comment> comments = commentRepository.findByPostAndUser(post, user);
+
+        return comments.stream().map(comment -> new CommentResponseDto(
+                comment.getCommentId(),
+                comment.getUser().getEmail(),
+                comment.getContents(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()
+        )).collect(Collectors.toList());
     }
 }
