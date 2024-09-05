@@ -1,5 +1,6 @@
 package com.sparta.newsfeed19.user.dto;
 
+import com.sparta.newsfeed19.user.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -12,5 +13,9 @@ public class SaveUserResponseDto {
     public SaveUserResponseDto(String email, LocalDateTime createdAt) {
         this.email = email;
         this.createdAt = createdAt;
+    }
+
+    public static SaveUserResponseDto from(User user) {
+        return new SaveUserResponseDto(user.getEmail(), user.getCreatedAt());
     }
 }

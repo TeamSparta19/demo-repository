@@ -7,12 +7,15 @@ import java.time.LocalDateTime;
 
 @Getter
 public class GetUserResponseDto {
-
     private String email;
     private LocalDateTime createdAt;
 
-    public GetUserResponseDto(User user) {
-        this.email = user.getEmail();
-        this.createdAt = user.getCreatedAt();
+    private GetUserResponseDto(String email, LocalDateTime createdAt) {
+        this.email = email;
+        this.createdAt = createdAt;
+    }
+
+    public static GetUserResponseDto of(User user) {
+        return new GetUserResponseDto(user.getEmail(), user.getCreatedAt());
     }
 }
