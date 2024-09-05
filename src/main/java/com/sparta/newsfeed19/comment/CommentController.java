@@ -6,6 +6,7 @@ import com.sparta.newsfeed19.comment.dto.CommentUpdateRequestDto;
 import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.annotation.LoginUser;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
