@@ -51,5 +51,5 @@
 
 ## ERD
 
-![SNS.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/83c75a39-3aba-4ba4-a792-7aefe4b07895/28ffe5ac-e678-4f71-8ce1-cafedf9fe487/44220f79-12b4-4e4f-8e7c-3d8f604b3eb2.png)
+![SNS](https://github.com/user-attachments/assets/e042c37f-be64-43ef-89fd-922fa33872cb)
 
