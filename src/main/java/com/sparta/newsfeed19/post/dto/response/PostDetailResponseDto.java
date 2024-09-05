@@ -5,8 +5,8 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 게시물 다건 조회 responseDto
 @Getter
-// 다건 조회 responseDto
 public class PostDetailResponseDto {
 
     private final Long id;
@@ -14,7 +14,6 @@ public class PostDetailResponseDto {
     private final String email;
     private final String title;
     private final String contents;
-//    private final int commentCount;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
@@ -25,13 +24,12 @@ public class PostDetailResponseDto {
             String contents,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
-    ){
+    ) {
         this.id = id;
         this.userId = user.getId();
         this.email = user.getEmail();
         this.title = title;
         this.contents = contents;
-//        this.commentCount = commentCount;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

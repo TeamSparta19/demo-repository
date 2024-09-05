@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-// 일정 삭제 responseDto
 public class PostDeleteResponseDto {
 
     private final Long postId;

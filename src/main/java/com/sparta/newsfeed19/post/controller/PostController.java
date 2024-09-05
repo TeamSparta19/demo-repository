@@ -7,8 +7,12 @@ import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
 import com.sparta.newsfeed19.post.dto.request.PostUpdateRequestDto;
 import com.sparta.newsfeed19.post.dto.response.*;
 import com.sparta.newsfeed19.post.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +26,7 @@ public class PostController {
     // 게시물 등록
     @PostMapping
     public ResponseEntity<ApiResponse> savePost(
-            @RequestBody PostSaveRequestDto requestDto,
+            @Valid @RequestBody PostSaveRequestDto requestDto,
             @LoginUser String email // 로그인된 사용자 정보 자동 주입
     ) {
         PostSaveResponseDto responseDto = postService.savePost(requestDto, email);
@@ -42,11 +46,10 @@ public class PostController {
     // 게시물 조회 다건
     @GetMapping("/feed")
     public ResponseEntity<ApiResponse> getPosts(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @LoginUser String email // 로그인된 사용자 정보 자동 주입
     ) {
-        Page<PostDetailResponseDto> posts = postService.getPosts(page, size, email);
+        Page<PostDetailResponseDto> posts = postService.getPosts(pageable, email);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, posts));
     }
 
@@ -54,7 +57,7 @@ public class PostController {
     @PutMapping("/{postId}")
     public ResponseEntity<ApiResponse> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostUpdateRequestDto postUpdateRequestDto,
+            @Valid @RequestBody PostUpdateRequestDto postUpdateRequestDto,
             @LoginUser String email
     ) {
         PostUpdateResponseDto response = postService.updatePost(postId, postUpdateRequestDto, email);
