@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
     void deleteByFollowerIdAndFollowingId(long followerId, long followingId);
+
     List<Follow> findByFollowingEmail(String email);
+
     List<Follow> findByFollowerEmail(String email);
 }

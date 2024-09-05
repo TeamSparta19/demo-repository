@@ -6,7 +6,6 @@ import com.sparta.newsfeed19.follow.dto.FollowingResponseDto;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.user.User;
 import com.sparta.newsfeed19.user.UserRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,46 +22,45 @@ public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
 
-    @Transactional
     public void follow(String email, FollowRequestDto followRequestDto) {
-        User requestUser = userRepository.findByEmailAndDeletedAtIsNull(email)
-                .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+        User requestUser = userRepository.findActiveUserByEmail(email);
 
-        if (Objects.equals(followRequestDto.getFollowingId(), requestUser.getId())) {
-            throw new ApiException(INVALID_FOLLOW_REQUEST);
-        }
+        checkFollowTarget(requestUser.getId(), followRequestDto.getFollowingId());
 
-        boolean isAlreadyFollow = requestUser.getFollowingList()
-                .stream()
-                .anyMatch(following -> Objects.equals(following.getFollowing().getId(), followRequestDto.getFollowingId()));
-
-        if (isAlreadyFollow) {
+        if (checkAlreadyFollow(followRequestDto, requestUser)) {
             throw new ApiException(ALREADY_FOLLOWED_USER);
         }
 
-        User followingUser = userRepository.findByIdAndDeletedAtIsNull(followRequestDto.getFollowingId())
-                .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+        User targetUser = userRepository.findActiveUserById(followRequestDto.getFollowingId());
 
-        followRepository.save(new Follow(requestUser, followingUser));
+        followRepository.save(new Follow(requestUser, targetUser));
     }
 
-    @Transactional
     public void unfollow(String email, FollowRequestDto followRequestDto) {
-        User requestUser = userRepository.findByEmailAndDeletedAtIsNull(email)
-                .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+        User requestUser = userRepository.findActiveUserByEmail(email);
 
-        boolean isAlreadyFollow = requestUser.getFollowingList()
-                .stream()
-                .anyMatch(following -> Objects.equals(following.getFollowing().getId(), followRequestDto.getFollowingId()));
+        checkFollowTarget(requestUser.getId(), followRequestDto.getFollowingId());
 
-        if (!isAlreadyFollow) {
+        if (!checkAlreadyFollow(followRequestDto, requestUser)) {
             throw new ApiException(ALREADY_UNFOLLOWED_USER);
         }
 
         followRepository.deleteByFollowerIdAndFollowingId(requestUser.getId(), followRequestDto.getFollowingId());
     }
 
-    @Transactional
+    private void checkFollowTarget(long requestUserId, long targetUserId) {
+        if (requestUserId == targetUserId) {
+            throw new ApiException(INVALID_FOLLOW_REQUEST);
+        }
+    }
+
+    private boolean checkAlreadyFollow(FollowRequestDto followRequestDto, User requestUser) {
+        return requestUser.getFollowingList()
+                .stream()
+                .anyMatch(following -> Objects.equals(following.getFollowing().getId(), followRequestDto.getFollowingId()));
+    }
+
+    @Transactional(readOnly = true)
     public List<FollowerResponseDto> getFollowerList(String email) {
         return followRepository.findByFollowingEmail(email)
                 .stream()
@@ -70,7 +68,7 @@ public class FollowService {
                 .toList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<FollowingResponseDto> getFollowingList(String email) {
         return followRepository.findByFollowerEmail(email)
                 .stream()
