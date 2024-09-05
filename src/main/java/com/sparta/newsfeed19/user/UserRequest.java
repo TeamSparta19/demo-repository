@@ -1,10 +1,14 @@
 package com.sparta.newsfeed19.user;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.sparta.newsfeed19.comment.repository.CommentRepository;
 =======
 import com.sparta.newsfeed19.comment.CommentRepository;
 >>>>>>> 0ceaa1d ([REFACTOR] 파사드 패턴 적용 [FIX] Validation 추가, 코드 정리)
+=======
+import com.sparta.newsfeed19.comment.repository.CommentRepository;
+>>>>>>> 797f869 ([FIX] Validation 추가, 코드 정리)
 import com.sparta.newsfeed19.follow.FollowRepository;
 import com.sparta.newsfeed19.global.exception.ApiException;
 import com.sparta.newsfeed19.post.repository.PostRepository;
