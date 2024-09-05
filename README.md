@@ -1,14 +1,17 @@
 # SNS 기본 기능 구현 프로젝트
 
+
 ## 개요
 
 입력 바랍니다 
+
 
 ## 와이어프레임
 
 프로젝트의 뉴스피드 기능에 대한 와이어프레임은 아래 링크를 통해 확인할 수 있습니다:
 
 [뉴스피드 와이어 프레임 (draw.io)](https://drive.google.com/file/d/1FhLqA07bWjnv6lhmOAaUphb6l33Kne6L/view?usp=sharing)
+
 
 ## API 설계
 
@@ -48,6 +51,7 @@
 | DELETE | 언팔로우          | /api/following       | `Authorization: Bearer <token>`        | `{ "followingId": "" }`                      | `{ "code": 200, "message": "정상 처리되었습니다.", "data": null }`                           |
 | GET    | 팔로워 목록 조회   | /api/followers       | `Authorization: Bearer <token>`        | 없음                                         | `{ "code": 200, "message": "정상 처리되었습니다.", "data": [ { "followerEmail": "" } ] }`   |
 | GET    | 팔로잉 목록 조회   | /api/following       | `Authorization: Bearer <token>`        | 없음                                         | `{ "code": 200, "message": "정상 처리되었습니다.", "data": [ { "followingEmail": "" } ] }`  |
+
 
 ## ERD
 
