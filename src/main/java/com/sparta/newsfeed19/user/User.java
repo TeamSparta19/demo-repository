@@ -1,14 +1,14 @@
 package com.sparta.newsfeed19.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sparta.newsfeed19.follow.Follow;
 import com.sparta.newsfeed19.global.common.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,10 +35,16 @@ public class User extends TimeStamp {
     @OneToMany(mappedBy = "follower", orphanRemoval = true)
     private List<Follow> followingList;
 
-    public User(String email, String password, LocalDateTime deletedAt) {
+    private User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.deletedAt = deletedAt;
+        this.deletedAt = null;
+        this.followerList = new ArrayList<>();
+        this.followingList = new ArrayList<>();
+    }
+
+    public static User of(String email, String password) {
+        return new User(email, password);
     }
 
     public void updatePassword(String password) {
