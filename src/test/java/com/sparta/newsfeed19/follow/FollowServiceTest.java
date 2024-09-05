@@ -1,18 +1,18 @@
 package com.sparta.newsfeed19.follow;
 
 import com.sparta.newsfeed19.data.FollowMockData;
-import com.sparta.newsfeed19.follow.dto.FollowRequestDto;
-import com.sparta.newsfeed19.global.exception.ApiException;
-import com.sparta.newsfeed19.user.UserRepository;
+import com.sparta.newsfeed19.follow.dto.request.FollowRequestDto;
+import com.sparta.newsfeed19.common.exception.ApiException;
+import com.sparta.newsfeed19.follow.repository.FollowRepository;
+import com.sparta.newsfeed19.follow.service.FollowService;
+import com.sparta.newsfeed19.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-
-import static com.sparta.newsfeed19.global.exception.ResponseCode.NOT_FOUND_USER;
+import static com.sparta.newsfeed19.common.exception.ResponseCode.NOT_FOUND_USER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;

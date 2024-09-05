@@ -1,8 +1,8 @@
 package com.sparta.newsfeed19.post.controller;
 
-import com.sparta.newsfeed19.global.annotation.LoginUser;
-import com.sparta.newsfeed19.global.common.response.ApiResponse;
-import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.common.annotation.LoginUser;
+import com.sparta.newsfeed19.common.exception.ResponseCode;
+import com.sparta.newsfeed19.common.response.ApiResponse;
 import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
 import com.sparta.newsfeed19.post.dto.request.PostUpdateRequestDto;
 import com.sparta.newsfeed19.post.dto.response.*;

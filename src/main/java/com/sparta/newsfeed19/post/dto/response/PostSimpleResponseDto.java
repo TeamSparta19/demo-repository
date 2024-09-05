@@ -1,5 +1,6 @@
 package com.sparta.newsfeed19.post.dto.response;
 
+import com.sparta.newsfeed19.entity.Post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ public class PostSimpleResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public PostSimpleResponseDto(
+    private PostSimpleResponseDto(
             Long id,
             String title,
             String contents,
@@ -26,5 +27,15 @@ public class PostSimpleResponseDto {
         this.contents = contents;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static PostSimpleResponseDto from(Post post) {
+        return new PostSimpleResponseDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContents(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        );
     }
 }
