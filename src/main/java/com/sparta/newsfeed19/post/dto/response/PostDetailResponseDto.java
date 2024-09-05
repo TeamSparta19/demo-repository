@@ -1,7 +1,9 @@
 package com.sparta.newsfeed19.post.dto.response;
 
-import com.sparta.newsfeed19.user.User;
+import com.sparta.newsfeed19.entity.User;
+import com.sparta.newsfeed19.entity.Post;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +19,7 @@ public class PostDetailResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public PostDetailResponseDto(
+    private PostDetailResponseDto(
             Long id,
             User user,
             String title,
@@ -32,5 +34,16 @@ public class PostDetailResponseDto {
         this.contents = contents;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static Page<PostDetailResponseDto> from(Page<Post> posts) {
+        return posts.map(post -> new PostDetailResponseDto(
+                post.getId(),
+                post.getUser(),
+                post.getTitle(),
+                post.getContents(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        ));
     }
 }

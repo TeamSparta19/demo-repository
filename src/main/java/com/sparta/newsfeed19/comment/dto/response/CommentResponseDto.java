@@ -1,6 +1,6 @@
 package com.sparta.newsfeed19.comment.dto.response;
 
-import com.sparta.newsfeed19.comment.Comment;
+import com.sparta.newsfeed19.entity.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

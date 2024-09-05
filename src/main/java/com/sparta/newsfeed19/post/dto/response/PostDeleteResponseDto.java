@@ -11,9 +11,13 @@ public class PostDeleteResponseDto {
     private final Long postId;
     private final String deleteAt;
 
-    public PostDeleteResponseDto (Long postId){
-        this.postId= postId;
+    private PostDeleteResponseDto(Long postId) {
+        this.postId = postId;
         this.deleteAt = formatCurrentTime(); // 포맷팅된 현재 시간을 저장
+    }
+
+    public static PostDeleteResponseDto of(Long postId) {
+        return new PostDeleteResponseDto(postId);
     }
 
     private String formatCurrentTime() {

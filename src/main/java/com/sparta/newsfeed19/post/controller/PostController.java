@@ -1,8 +1,8 @@
 package com.sparta.newsfeed19.post.controller;
 
-import com.sparta.newsfeed19.global.annotation.LoginUser;
-import com.sparta.newsfeed19.global.common.response.ApiResponse;
-import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.common.annotation.LoginUser;
+import com.sparta.newsfeed19.common.exception.ResponseCode;
+import com.sparta.newsfeed19.common.response.ApiResponse;
 import com.sparta.newsfeed19.post.dto.request.PostSaveRequestDto;
 import com.sparta.newsfeed19.post.dto.request.PostUpdateRequestDto;
 import com.sparta.newsfeed19.post.dto.response.*;
@@ -36,10 +36,9 @@ public class PostController {
     // 게시물 조회 단건
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse> getPost(
-            @PathVariable("postId") Long postId,
-            @LoginUser String email
+            @PathVariable("postId") Long postId
     ) {
-        PostSimpleResponseDto post = postService.getPost(postId, email);
+        PostSimpleResponseDto post = postService.getPost(postId);
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, post));
     }
 

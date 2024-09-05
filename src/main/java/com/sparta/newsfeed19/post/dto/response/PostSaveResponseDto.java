@@ -1,6 +1,7 @@
 package com.sparta.newsfeed19.post.dto.response;
 
-import com.sparta.newsfeed19.user.User;
+import com.sparta.newsfeed19.entity.User;
+import com.sparta.newsfeed19.entity.Post;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class PostSaveResponseDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public PostSaveResponseDto(
+    private PostSaveResponseDto(
             Long id,
             User user,
             String title,
@@ -29,5 +30,16 @@ public class PostSaveResponseDto {
         this.contents = contents;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public static PostSaveResponseDto from(Post post) {
+        return new PostSaveResponseDto(
+                post.getId(),
+                post.getUser(),
+                post.getTitle(),
+                post.getContents(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        );
     }
 }

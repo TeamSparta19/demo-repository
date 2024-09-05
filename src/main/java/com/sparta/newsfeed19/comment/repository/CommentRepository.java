@@ -1,10 +1,10 @@
 package com.sparta.newsfeed19.comment.repository;
 
-import com.sparta.newsfeed19.comment.Comment;
-import com.sparta.newsfeed19.global.exception.ApiException;
-import com.sparta.newsfeed19.global.exception.ResponseCode;
-import com.sparta.newsfeed19.post.entity.Post;
-import com.sparta.newsfeed19.user.User;
+import com.sparta.newsfeed19.common.exception.ApiException;
+import com.sparta.newsfeed19.common.exception.ResponseCode;
+import com.sparta.newsfeed19.entity.Comment;
+import com.sparta.newsfeed19.entity.Post;
+import com.sparta.newsfeed19.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

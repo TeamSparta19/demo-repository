@@ -1,16 +1,16 @@
 package com.sparta.newsfeed19.comment.service;
 
-import com.sparta.newsfeed19.comment.Comment;
 import com.sparta.newsfeed19.comment.dto.request.CommentRequestDto;
 import com.sparta.newsfeed19.comment.dto.request.CommentUpdateRequestDto;
 import com.sparta.newsfeed19.comment.dto.response.CommentResponseDto;
 import com.sparta.newsfeed19.comment.repository.CommentRepository;
-import com.sparta.newsfeed19.global.exception.ApiException;
-import com.sparta.newsfeed19.global.exception.ResponseCode;
-import com.sparta.newsfeed19.post.entity.Post;
+import com.sparta.newsfeed19.common.exception.ApiException;
+import com.sparta.newsfeed19.common.exception.ResponseCode;
+import com.sparta.newsfeed19.entity.Comment;
+import com.sparta.newsfeed19.entity.Post;
+import com.sparta.newsfeed19.entity.User;
 import com.sparta.newsfeed19.post.repository.PostRepository;
-import com.sparta.newsfeed19.user.User;
-import com.sparta.newsfeed19.user.UserRepository;
+import com.sparta.newsfeed19.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
-@Transactional // 클래스 레벨에 @Transactional 을 적용하여 모든 메서드에 기본 트랜잭션 설정
+@Service
+@Transactional
+@RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -133,4 +133,5 @@ public class CommentService {
 
         return comments.stream().map(CommentResponseDto::from).toList();
     }
+
 }

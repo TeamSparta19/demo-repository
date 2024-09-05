@@ -1,12 +1,12 @@
 package com.sparta.newsfeed19.comment.controller;
 
-import com.sparta.newsfeed19.comment.service.CommentService;
 import com.sparta.newsfeed19.comment.dto.request.CommentRequestDto;
 import com.sparta.newsfeed19.comment.dto.request.CommentUpdateRequestDto;
 import com.sparta.newsfeed19.comment.dto.response.CommentResponseDto;
-import com.sparta.newsfeed19.global.annotation.LoginUser;
-import com.sparta.newsfeed19.global.common.response.ApiResponse;
-import com.sparta.newsfeed19.global.exception.ResponseCode;
+import com.sparta.newsfeed19.comment.service.CommentService;
+import com.sparta.newsfeed19.common.response.ApiResponse;
+import com.sparta.newsfeed19.common.annotation.LoginUser;
+import com.sparta.newsfeed19.common.exception.ResponseCode;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +52,7 @@ public class CommentController {
         return ResponseEntity.ok(ApiResponse.setResponse(ResponseCode.SUCCESS, null));
     }
 
+    // 게시물 별 댓글 조회
     @GetMapping("/post/{postId}")
     public ResponseEntity<ApiResponse> getCommentsByPost(@PathVariable Long postId) {
         List<CommentResponseDto> comments = commentService.getCommentsByPost(postId);
