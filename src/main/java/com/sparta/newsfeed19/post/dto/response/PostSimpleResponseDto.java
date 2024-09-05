@@ -4,8 +4,8 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
 // 게시물 단건 조회 responseDto
+@Getter
 public class PostSimpleResponseDto {
 
     private final Long id;

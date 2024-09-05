@@ -16,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByEmailAndDeletedAtIsNull(String email);
+
     default User findActiveUserByEmail(String email) {
         return findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
@@ -24,5 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     default User findActiveUserById(long id) {
         return findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+    }
+
+    default void existsActiveUserByEmail(String email) {
+        if (!existsByEmailAndDeletedAtIsNull(email)) {
+            throw new ApiException(NOT_FOUND_USER);
+        }
     }
 }
