@@ -30,7 +30,7 @@ public enum ResponseCode {
     COMMENT_PERMISSION_DENIED("댓글에 대한 권한이 없습니다.", HttpStatus.FORBIDDEN),
     EMPTY_COMMENT_CONTENT("댓글 내용이 비어 있습니다.", HttpStatus.BAD_REQUEST),
     // 팔로우 응답 코드
-    INVALID_FOLLOW_REQUEST("자기 자신을 팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_FOLLOW_REQUEST("자기 자신을 (언)팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST),
     ALREADY_FOLLOWED_USER("이미 팔로우중인 사용자입니다.", HttpStatus.CONFLICT),
     ALREADY_UNFOLLOWED_USER("팔로우중이 아닌 사용자는 언팔로우할 수 없습니다.", HttpStatus.BAD_REQUEST),
 

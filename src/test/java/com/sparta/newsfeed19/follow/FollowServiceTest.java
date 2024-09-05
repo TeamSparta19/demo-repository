@@ -33,7 +33,7 @@ class FollowServiceTest {
     public void 본인_이메일이_잘못_되어서_팔로우에_실패한다() {
         // given
         FollowRequestDto followRequestDto = FollowMockData.followRequestDto(1L);
-        given(userRepository.findByEmail(anyString())).willReturn(Optional.empty());
+        given(userRepository.findActiveUserByEmail(anyString())).willThrow(new ApiException(NOT_FOUND_USER));
 
         // when
         Throwable throwable = assertThrows(ApiException.class, () -> followService.follow("tttt", followRequestDto));
