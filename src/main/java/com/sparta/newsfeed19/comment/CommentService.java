@@ -12,11 +12,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -33,12 +33,12 @@ public class CommentService {
         // 이메일을 통해 영속 상태의 사용자 엔티티 조회
         User persistedUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(ResponseCode.NOT_FOUND_USER));
-        System.out.println("Persisted User ID: " + persistedUser.getId());
+        log.info("Persisted User ID: {}", persistedUser.getId());  // System.out.println 대신 log 사용
 
         // 영속 상태의 게시물 엔티티 조회
         Post post = postRepository.findById(commentRequestDto.getPostId())
                 .orElseThrow(() -> new ApiException(ResponseCode.POST_NOT_FOUND));
-        System.out.println("Persisted Post ID: " + post.getId());
+        log.info("Persisted Post ID: {}", post.getId());  // System.out.println 대신 log 사용
 
         // 새로운 댓글 생성 및 저장
         Comment comment = new Comment(persistedUser, post, commentRequestDto.getContents());
