@@ -1,6 +1,5 @@
 package com.sparta.newsfeed19.comment;
 
-
 import com.sparta.newsfeed19.global.common.entity.TimeStamp;
 import com.sparta.newsfeed19.post.entity.Post;
 import com.sparta.newsfeed19.user.User;
@@ -34,6 +33,10 @@ public class Comment extends TimeStamp {
         this.user = user;
         this.post = post;
         this.contents = contents;
+    }
+
+    public static Comment from(User user, Post post, String contents) {
+        return new Comment(user, post, contents);
     }
 
     public void updateContents(String contents) {
