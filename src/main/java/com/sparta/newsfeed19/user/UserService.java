@@ -48,7 +48,6 @@ public class UserService {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
 
-
         // 사용자 확인
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("등록된 회원이 없습니다.")
@@ -65,10 +64,8 @@ public class UserService {
             throw new ApiException(ResponseCode.NOT_FOUND_USER);
         }
 
-
         // JWT 생성 및 쿠키에 저장 후 Response 에 추가
         String token = jwtUtil.createToken(user.getEmail());
-
 
         return token;
     }
@@ -89,16 +86,21 @@ public class UserService {
     // 유저 수정
     @Transactional
     public void updateUserPassword(
-            Long userId,
-            UpdateUserPasswordRequestDto updateUserRequestDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+            String email,
+            Long id,
+            UpdateUserPasswordRequestDto updateUserRequestDto
+    ) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException(NOT_FOUND_USER));
 
+        if (!user.getId().equals(id)) {
+            throw new ApiException(UNAUTHORIZED_UPDATE_USER);
+        }
 
         // 비밀번호 수정 시, 본인 확인을 위해 입력한 현재 비밀번호가 일치하지 않은 경우
         if (!passwordEncoder.matches(updateUserRequestDto.getOldPassword(), user.getPassword())) {
             throw new ApiException(INVALID_PASSWORD);
         }
-        //현재 비밀번호와 동일한 비밀번호로 수정하는 경우
+        // 현재 비밀번호와 동일한 비밀번호로 수정하는 경우
         if (passwordEncoder.matches(updateUserRequestDto.getNewPassword(), user.getPassword())) {
             throw new ApiException(SAME_PASSWORD);
         }
@@ -109,16 +111,19 @@ public class UserService {
 
     // 유저 삭제
     @Transactional
-    public void deleteUser(Long id, DeleteUserRequestDto deleteUserRequestDto) {
-        User user = userRepository.findById(id)
+    public void deleteUser(String email, Long id, DeleteUserRequestDto deleteUserRequestDto) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException(NOT_FOUND_USER));
+
+        if (user.getId().equals(id)) {
+            throw new ApiException(UNAUTHORIZED_DELETE_USER);
+        }
 
         if (!passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
             throw new ApiException(INVALID_PASSWORD);
         }
 
         user.updateDeleteAt();
-
         userRepository.save(user);
     }
 }
