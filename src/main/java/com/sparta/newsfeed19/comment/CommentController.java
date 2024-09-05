@@ -3,10 +3,9 @@ package com.sparta.newsfeed19.comment;
 import com.sparta.newsfeed19.comment.dto.request.CommentRequestDto;
 import com.sparta.newsfeed19.comment.dto.request.CommentUpdateRequestDto;
 import com.sparta.newsfeed19.comment.dto.response.CommentResponseDto;
-import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.annotation.LoginUser;
+import com.sparta.newsfeed19.global.common.response.ApiResponse;
 import com.sparta.newsfeed19.global.exception.ResponseCode;
-import com.sparta.newsfeed19.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +43,7 @@ public class CommentController {
         commentService.deleteComment(id, email);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS.getCode().value(), ResponseCode.SUCCESS.getMessage(), null));
     }
+
     @GetMapping("/post/{postId}")
     public ResponseEntity<ApiResponse> getCommentsByPost(@PathVariable Long postId) {
         List<CommentResponseDto> comments = commentService.getCommentsByPost(postId);
