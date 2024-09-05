@@ -1,6 +1,6 @@
 package com.sparta.newsfeed19.comment.controller;
 
-import com.sparta.newsfeed19.comment.CommentService;
+import com.sparta.newsfeed19.comment.service.CommentService;
 import com.sparta.newsfeed19.comment.dto.request.CommentRequestDto;
 import com.sparta.newsfeed19.comment.dto.request.CommentUpdateRequestDto;
 import com.sparta.newsfeed19.comment.dto.response.CommentResponseDto;
